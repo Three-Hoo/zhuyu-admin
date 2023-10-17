@@ -1,0 +1,8 @@
+import { createPage } from '@/core/create-page'
+import { {{ camelCase name }}MetaList } from '@/sources/{{ snakeCase name }}'
+
+export default createPage({
+  api: '/api/{{ snakeCase name }}',
+  title: '{{ cn_name }}',
+  columns: {{ camelCase name }}MetaList,
+})

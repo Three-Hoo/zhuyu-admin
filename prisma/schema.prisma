@@ -1,0 +1,844 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model achievement {
+  tenant_id        String?   @db.VarChar(32)
+  revision         Int?
+  created_by       String?   @db.VarChar(32)
+  created_time     DateTime? @default(now()) @db.Timestamp(6)
+  updated_by       String?   @db.VarChar(32)
+  updated_time     DateTime? @db.Timestamp(6)
+  id               Int       @id @default(autoincrement())
+  achievement_name String?   @db.VarChar(90)
+  icon             String?   @db.VarChar(255)
+  inactive_icon    String?   @db.VarChar(255)
+  start_score      Int?
+  end_score        Int?
+  describe         String?   @db.VarChar(255)
+  detail           String?
+  type_id          Int?
+  category         String?   @db.VarChar(255)
+  is_publish       Boolean   @default(false)
+
+  user_achievements  user_achievement[]
+  achievement_type   achievement_type?  @relation(fields: [achievement_typeId], references: [id])
+  achievement_typeId Int?
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model achievement_type {
+  tenant_id    String?   @db.VarChar(32)
+  revision     Int?
+  created_by   String?   @db.VarChar(32)
+  created_time DateTime? @default(now()) @db.Timestamp(6)
+  updated_by   String?   @db.VarChar(32)
+  updated_time DateTime? @db.Timestamp(6)
+  id           Int       @id @default(autoincrement())
+  name         String?   @unique(map: "type") @db.VarChar(90)
+  is_summary   Boolean?
+  category     String?   @db.VarChar(255)
+
+  achievements achievement[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model channel {
+  tenant_id             String?   @db.VarChar(32)
+  revision              Int?
+  created_by            String?   @db.VarChar(32)
+  created_time          DateTime? @default(now()) @db.Timestamp(6)
+  updated_by            String?   @db.VarChar(32)
+  updated_time          DateTime? @db.Timestamp(6)
+  id                    Int       @id @default(autoincrement())
+  channel_name          String?   @db.VarChar(90)
+  avatar                String?   @db.VarChar(255)
+  scene_id              Int?
+  scene_context_id      Int?
+  robot_id              Int?
+  speed                 Int?
+  complexity            String?   @db.VarChar(90)
+  is_public             Boolean?
+  auto_play_audio_self  Boolean?
+  auto_play_audio_other Boolean?
+  last_message          String?   @db.VarChar(255)
+  type                  String?   @db.VarChar(90)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model channel_member {
+  tenant_id    String?   @db.VarChar(32)
+  revision     Int?
+  created_by   String?   @db.VarChar(32)
+  created_time DateTime? @default(now()) @db.Timestamp(6)
+  updated_by   String?   @db.VarChar(32)
+  updated_time DateTime? @db.Timestamp(6)
+  id           Int       @id @default(autoincrement())
+  user_id      Int
+  channel_id   Int
+  nickname     String?   @db.VarChar(90)
+  avatar       String?   @db.VarChar(255)
+
+  @@index([user_id, channel_id], map: "channel_member_user")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model coupon {
+  tenant_id          String?   @db.VarChar(32)
+  revision           Int?
+  created_by         String?   @db.VarChar(32)
+  created_time       DateTime? @default(now()) @db.Timestamp(6)
+  updated_by         String?   @db.VarChar(32)
+  updated_time       DateTime? @db.Timestamp(6)
+  id                 Int       @id @default(autoincrement())
+  title              String    @db.VarChar(32)
+  coupon_description String?   @db.VarChar(900)
+  detail             String?
+  effective          Int
+  expired            Int
+  coupon_type        String    @db.VarChar(32)
+  amount             Int
+  picture            String?   @db.VarChar(255)
+  expired_picture    String?   @db.VarChar(255)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model credit_plan {
+  tenant_id       String?   @db.VarChar(32)
+  revision        Int?
+  created_by      String?   @db.VarChar(32)
+  created_time    DateTime? @default(now()) @db.Timestamp(6)
+  updated_by      String?   @db.VarChar(32)
+  updated_time    DateTime? @db.Timestamp(6)
+  id              Int       @id @default(autoincrement())
+  describe        String    @db.VarChar(255)
+  detail          String?   @db.VarChar(900)
+  icon            String?   @db.VarChar(255)
+  amount          Int
+  original_amount Int?
+  credit          Int
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model credit_record {
+  tenant_id          String?   @db.VarChar(32)
+  revision           Int?
+  created_by         String?   @db.VarChar(32)
+  created_time       DateTime? @default(now()) @db.Timestamp(6)
+  updated_by         String?   @db.VarChar(32)
+  updated_time       DateTime? @db.Timestamp(6)
+  id                 Int       @id @default(autoincrement())
+  user_id            Int
+  credit_record_type String    @db.VarChar(32)
+  credit             Int
+  current_credit     Int
+  expired            DateTime? @db.Timestamp(6)
+
+  @@index([user_id], map: "credit_record_user")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model daily_learning_record {
+  tenant_id    String?   @db.VarChar(32)
+  revision     Int?
+  created_by   String?   @db.VarChar(32)
+  created_time DateTime? @default(now()) @db.Timestamp(6)
+  updated_by   String?   @db.VarChar(32)
+  updated_time DateTime? @db.Timestamp(6)
+  id           Int       @id @default(autoincrement())
+  user_id      Int
+  start_time   DateTime  @db.Timestamp(6)
+  daily        Int
+  duration     Int?
+
+  @@index([user_id, daily], map: "daily_learning_record_user")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model favorite {
+  tenant_id     String?   @db.VarChar(32)
+  revision      Int?
+  created_by    String?   @db.VarChar(32)
+  created_time  DateTime? @default(now()) @db.Timestamp(6)
+  updated_by    String?   @db.VarChar(32)
+  updated_time  DateTime? @db.Timestamp(6)
+  id            Int       @id @default(autoincrement())
+  content       String    @db.VarChar(255)
+  favorite_type String?   @db.VarChar(90)
+  from_id       Int?
+  content_id    Int?
+  extra         String?   @db.VarChar(255)
+  user_id       String    @db.VarChar(32)
+
+  @@unique([favorite_type, from_id, content_id, user_id], map: "favorite_user_type_id")
+}
+
+model flyway_schema_history {
+  installed_rank Int      @id(map: "flyway_schema_history_pk")
+  version        String?  @db.VarChar(50)
+  description    String   @db.VarChar(200)
+  type           String   @db.VarChar(20)
+  script         String   @db.VarChar(1000)
+  checksum       Int?
+  installed_by   String   @db.VarChar(100)
+  installed_on   DateTime @default(now()) @db.Timestamp(6)
+  execution_time Int
+  success        Boolean
+
+  @@index([success], map: "flyway_schema_history_s_idx")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model followers {
+  tenant_id                    String?   @db.VarChar(32)
+  revision                     Int?
+  created_by                   String?   @db.VarChar(32)
+  created_time                 DateTime? @default(now()) @db.Timestamp(6)
+  updated_by                   String?   @db.VarChar(32)
+  updated_time                 DateTime? @db.Timestamp(6)
+  id                           Int       @id @default(autoincrement())
+  followers_following          Int
+  followers_following_avatar   String?   @db.VarChar(255)
+  followers_following_nickname String?   @db.VarChar(90)
+  follower                     Int
+  follower_avatar              String?   @db.VarChar(255)
+  follower_nickname            String?   @db.VarChar(90)
+
+  @@index([followers_following, follower], map: "follower_following")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model footmark {
+  tenant_id          String?   @db.VarChar(32)
+  revision           Int?
+  created_by         String?   @db.VarChar(32)
+  created_time       DateTime? @default(now()) @db.Timestamp(6)
+  updated_by         String?   @db.VarChar(32)
+  updated_time       DateTime? @db.Timestamp(6)
+  id                 Int       @id @default(autoincrement())
+  user_id            Int
+  footmark_type      String    @db.VarChar(32)
+  footmark_id        Int
+  footmark_thumbnail String?   @db.VarChar(255)
+  title              String    @db.VarChar(32)
+  subtitle           String?   @db.VarChar(32)
+
+  @@index([user_id], map: "footmark_user")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model membership_plan {
+  tenant_id             String?   @db.VarChar(32)
+  revision              Int?
+  created_by            String?   @db.VarChar(32)
+  created_time          DateTime? @default(now()) @db.Timestamp(6)
+  updated_by            String?   @db.VarChar(32)
+  updated_time          DateTime? @db.Timestamp(6)
+  id                    Int       @id @default(autoincrement())
+  title                 String    @db.VarChar(90)
+  describe              String?   @db.VarChar(255)
+  detail                String    @db.VarChar(900)
+  icon                  String?   @db.VarChar(255)
+  amount                Int
+  original_amount       Int?
+  discount_end_datetime DateTime? @db.Timestamp(6)
+  credit                Int
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model membership_record {
+  tenant_id     String?   @db.VarChar(32)
+  revision      Int?
+  created_by    String?   @db.VarChar(32)
+  created_time  DateTime? @default(now()) @db.Timestamp(6)
+  updated_by    String?   @db.VarChar(32)
+  updated_time  DateTime? @db.Timestamp(6)
+  id            Int       @id @default(autoincrement())
+  user_id       Int
+  membership_id Int
+  expired       DateTime  @db.Timestamp(6)
+  effective     DateTime  @db.Timestamp(6)
+  amount        Int?
+
+  @@index([membership_id], map: "membership_record_membership")
+  @@index([user_id], map: "membership_record_user")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model message {
+  tenant_id        String?   @db.VarChar(32)
+  revision         Int?
+  created_by       String?   @db.VarChar(32)
+  created_time     DateTime? @default(now()) @db.Timestamp(6)
+  updated_by       String?   @db.VarChar(32)
+  updated_time     DateTime? @db.Timestamp(6)
+  id               Int       @id @default(autoincrement())
+  channel_id       Int
+  message_type     String    @db.VarChar(90)
+  original_content String    @db.VarChar(900)
+  content          String?   @db.VarChar(900)
+  content_cn       String?   @db.VarChar(32)
+  audio_url        String?   @db.VarChar(32)
+  image_url        String?   @db.VarChar(32)
+  parent_id        Int?
+  sender           Int
+  sender_avatar    String?   @db.VarChar(32)
+  sender_nickname  String?   @db.VarChar(32)
+
+  @@index([channel_id], map: "message_channel_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model order {
+  tenant_id         String?   @db.VarChar(32)
+  revision          Int?
+  created_by        String?   @db.VarChar(32)
+  created_time      DateTime? @default(now()) @db.Timestamp(6)
+  updated_by        String?   @db.VarChar(32)
+  updated_time      DateTime? @db.Timestamp(6)
+  id                Int       @id @default(autoincrement())
+  user_id           Int
+  order_description String?   @db.VarChar(255)
+  order_status      String    @db.VarChar(90)
+  business_id       String?   @db.VarChar(168)
+  payment_mode      String?   @db.VarChar(90)
+  amount            Int
+  discount          Int?
+  deduction         Int?
+  user_coupon_id    Int?
+  original_amount   Int?
+  cost_type         String?   @db.VarChar(90)
+  cost_id           Int
+
+  @@index([cost_type, cost_id], map: "order_cost")
+  @@index([order_status], map: "order_status")
+  @@index([user_id], map: "order_user")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model order_record {
+  tenant_id           String?   @db.VarChar(32)
+  revision            Int?
+  created_by          String?   @db.VarChar(32)
+  created_time        DateTime? @default(now()) @db.Timestamp(6)
+  updated_by          String?   @db.VarChar(32)
+  updated_time        DateTime? @db.Timestamp(6)
+  id                  Int       @id @default(autoincrement())
+  order_id            Int
+  user_id             Int
+  order_record_status String    @db.VarChar(90)
+  business_id         String?   @db.VarChar(255)
+
+  @@index([order_id], map: "order_record_order")
+  @@index([user_id], map: "order_record_user")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model post {
+  tenant_id    String?   @db.VarChar(32)
+  revision     Int?
+  created_by   String?   @db.VarChar(32)
+  created_time DateTime? @default(now()) @db.Timestamp(6)
+  updated_by   String?   @db.VarChar(32)
+  updated_time DateTime? @db.Timestamp(6)
+  id           Int       @id @default(autoincrement())
+  title        String?   @db.VarChar(32)
+  duration     Int?
+  cover        String?   @db.VarChar(255)
+  author       String?   @db.VarChar(90)
+  heat         Int?
+  deploy       DateTime? @db.Timestamp(6)
+  intro        String?   @db.VarChar(255)
+  read_count   Int?
+  word_count   Int?
+  char_count   Int?
+  category     String?   @db.VarChar(90)
+  sub_category String?   @db.VarChar(90)
+  status       String?   @default("DRAFT") @db.VarChar(32)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model post_paragraph {
+  tenant_id           String?   @db.VarChar(32)
+  revision            Int?
+  created_by          String?   @db.VarChar(32)
+  created_time        DateTime? @default(now()) @db.Timestamp(6)
+  updated_by          String?   @db.VarChar(32)
+  updated_time        DateTime? @db.Timestamp(6)
+  id                  Int       @id @default(autoincrement())
+  post_id             Int
+  post_paragraph_type String?   @db.VarChar(90)
+  content             String?   @db.VarChar(900)
+  content_cn          String?   @db.VarChar(900)
+  sort                Int?
+
+  @@index([post_id], map: "post_paragraph_post")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model post_record {
+  tenant_id    String?   @db.VarChar(32)
+  revision     Int?
+  created_by   String?   @db.VarChar(32)
+  created_time DateTime? @default(now()) @db.Timestamp(6)
+  updated_by   String?   @db.VarChar(32)
+  updated_time DateTime? @db.Timestamp(6)
+  id           Int       @id @default(autoincrement())
+  post_id      Int
+  progress     Decimal   @default(0) @db.Decimal(24, 6)
+  paragraph_id Int?
+  user_id      Int
+
+  @@unique([post_id, user_id], map: "post_user")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model preset_scenes {
+  tenant_id                 String?   @db.VarChar(32)
+  revision                  Int?
+  created_by                String?   @db.VarChar(32)
+  created_time              DateTime? @default(now()) @db.Timestamp(6)
+  updated_by                String?   @db.VarChar(32)
+  updated_time              DateTime? @db.Timestamp(6)
+  id                        Int       @id @default(autoincrement())
+  preset_scenes_description String?   @db.VarChar(255)
+  preset_scenes_image       String?   @db.VarChar(255)
+  speed                     Int?
+  complexity                Int?
+  robot_id                  Int?
+  tone_id                   Int?
+  scene_id                  Int?
+  scene_context_id          Int?
+
+  @@index([robot_id, tone_id, scene_id, scene_context_id], map: "preset_scenes_robot_tone_scene_scene_context")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model robot {
+  tenant_id            String?   @db.VarChar(32)
+  revision             Int?
+  created_by           String?   @db.VarChar(32)
+  created_time         DateTime? @default(now()) @db.Timestamp(6)
+  updated_by           String?   @db.VarChar(32)
+  updated_time         DateTime? @db.Timestamp(6)
+  id                   Int       @id @default(autoincrement())
+  prompt               String?   @db.VarChar(255)
+  gender               String?   @db.VarChar(32)
+  avatar               String?   @db.VarChar(255)
+  microsoft_voice_name String?   @db.VarChar(90)
+  robot_name           String?   @db.VarChar(32)
+  personal_blurb       String?   @db.VarChar(900)
+  age                  Int?
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model scene_context_reminder {
+  tenant_id         String?   @db.VarChar(32)
+  revision          Int?
+  created_by        String?   @db.VarChar(32)
+  created_time      DateTime? @default(now()) @db.Timestamp(6)
+  updated_by        String?   @db.VarChar(32)
+  updated_time      DateTime? @db.Timestamp(6)
+  id                Int       @id @default(autoincrement())
+  scenes_context_id Int?
+  reminder          String?   @db.VarChar(255)
+  reminder_cn       String?   @db.VarChar(255)
+  type              String?   @db.VarChar(90)
+
+  @@index([scenes_context_id], map: "scene_context_reminder_context")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model scenes {
+  tenant_id    String?   @db.VarChar(32)
+  revision     Int?
+  created_by   String?   @db.VarChar(32)
+  created_time DateTime? @default(now()) @db.Timestamp(6)
+  updated_by   String?   @db.VarChar(32)
+  updated_time DateTime? @db.Timestamp(6)
+  id           Int       @id @default(autoincrement())
+  scenes_name  String    @db.VarChar(90)
+  icon         String?   @db.VarChar(255)
+  sort         Int?
+  scenes_value String?   @db.VarChar(32)
+
+  @@index([sort], map: "scenes_sort")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model scenes_context {
+  tenant_id                     String?   @db.VarChar(32)
+  revision                      Int?
+  created_by                    String?   @db.VarChar(32)
+  created_time                  DateTime? @default(now()) @db.Timestamp(6)
+  updated_by                    String?   @db.VarChar(32)
+  updated_time                  DateTime? @db.Timestamp(6)
+  id                            Int       @id @default(autoincrement())
+  scenes_context_description    String?   @db.VarChar(900)
+  scenes_context_description_cn String?   @db.VarChar(900)
+  prompt                        String?   @db.VarChar(900)
+  scenes_id                     Int?
+
+  @@index([scenes_id], map: "scenes_context_scene")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model show_achievement {
+  tenant_id      String?   @db.VarChar(32)
+  revision       Int?
+  created_by     String?   @db.VarChar(32)
+  created_time   DateTime? @default(now()) @db.Timestamp(6)
+  updated_by     String?   @db.VarChar(32)
+  updated_time   DateTime? @db.Timestamp(6)
+  id             Int       @id @default(autoincrement())
+  user_id        Int
+  achievement_id Int?
+
+  @@index([achievement_id], map: "achievement_show_achievement")
+  @@index([user_id], map: "achievement_show_user")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model task {
+  tenant_id      String?   @db.VarChar(32)
+  revision       Int?
+  created_by     String?   @db.VarChar(32)
+  created_time   DateTime? @default(now()) @db.Timestamp(6)
+  updated_by     String?   @db.VarChar(32)
+  updated_time   DateTime? @db.Timestamp(6)
+  id             Int       @id @default(autoincrement())
+  task_name      String?   @db.VarChar(90)
+  task_type      String?   @db.VarChar(32)
+  reward_type    String?   @db.VarChar(90)
+  quantity       Int?
+  start_time     DateTime? @db.Timestamp(6)
+  end_time       DateTime? @db.Timestamp(6)
+  task_status    String?   @db.VarChar(32)
+  guide_url      String?   @db.VarChar(255)
+  identification String?   @db.VarChar
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model temporary_credit {
+  tenant_id    String?   @db.VarChar(32)
+  revision     Int?
+  created_by   String?   @db.VarChar(32)
+  created_time DateTime? @default(now()) @db.Timestamp(6)
+  updated_by   String?   @db.VarChar(32)
+  updated_time DateTime? @db.Timestamp(6)
+  id           Int       @id @default(autoincrement())
+  credit       Int       @default(0)
+  start_time   DateTime  @db.Timestamp(6)
+  expired      DateTime  @db.Timestamp(6)
+  access_mode  String?   @db.VarChar(255)
+  from_id      Int
+  user_id      String    @db.VarChar(32)
+
+  @@index([user_id], map: "temporary_credit_user")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tone {
+  tenant_id             String?   @db.VarChar(32)
+  revision              Int?
+  created_by            String?   @db.VarChar(32)
+  created_time          DateTime? @default(now()) @db.Timestamp(6)
+  updated_by            String?   @db.VarChar(32)
+  updated_time          DateTime? @db.Timestamp(6)
+  id                    Int       @id @default(autoincrement())
+  robot_id              Int?
+  is_general            Boolean?
+  microsoft_voice_style String?   @db.VarChar(90)
+  guide                 String?   @db.VarChar(255)
+
+  @@index([robot_id], map: "tone_robot")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user {
+  tenant_id             String?   @db.VarChar(32)
+  revision              Int?
+  created_by            String?   @db.VarChar(32)
+  created_time          DateTime? @default(now()) @db.Timestamp(6)
+  updated_by            String?   @db.VarChar(32)
+  updated_time          DateTime? @db.Timestamp(6)
+  id                    Int       @id @default(autoincrement())
+  nickname              String?   @db.VarChar(32)
+  personal_blurb        String?   @db.VarChar(200)
+  personal_introduction String?
+  gender                String?   @default("UnKnow") @db.VarChar(32)
+  birthday              DateTime? @db.Date
+  province              String?   @db.VarChar(90)
+  city                  String?   @db.VarChar(90)
+  area                  String?   @db.VarChar(90)
+  achievement_score     Int?
+  temporary_credit      Int?
+  membership_level      String?   @db.VarChar(32)
+  membership_expired    DateTime? @db.Timestamp(6)
+  email                 String?   @db.VarChar(255)
+  user_no               String?   @unique(map: "subscriber_number") @db.VarChar(32)
+  inviter               String?   @db.VarChar(32)
+  phone                 String?   @db.VarChar(32)
+  wechat_openid         String?   @db.VarChar(128)
+  wechat_unionid        String?   @db.VarChar(128)
+  password              String?   @db.VarChar(64)
+  status                String?   @default("InActive") @db.VarChar(32)
+  is_paid               Boolean   @default(false)
+  nonce                 String    @db.VarChar(32)
+  role                  String?   @default("USER") @db.VarChar(32)
+  head_portrait         String?   @db.VarChar(255)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user_achievement {
+  tenant_id      String?      @db.VarChar(32)
+  revision       Int?
+  created_by     String?      @db.VarChar(32)
+  created_time   DateTime?    @default(now()) @db.Timestamp(6)
+  updated_by     String?      @db.VarChar(32)
+  updated_time   DateTime?    @db.Timestamp(6)
+  id             Int          @id @default(autoincrement())
+  user_id        Int?
+  achievement_id Int?
+  activate_date  DateTime?    @db.Date
+  achievement    achievement? @relation(fields: [achievementId], references: [id])
+  achievementId  Int?
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user_achievement_type {
+  tenant_id           String?   @db.VarChar(32)
+  revision            Int?
+  created_by          String?   @db.VarChar(32)
+  created_time        DateTime? @default(now()) @db.Timestamp(6)
+  updated_by          String?   @db.VarChar(32)
+  updated_time        DateTime? @db.Timestamp(6)
+  id                  Int       @id
+  user_id             Int
+  achievement_type_id Int
+  score               Int?
+
+  @@index([achievement_type_id])
+  @@index([user_id])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user_config {
+  tenant_id            String?   @db.VarChar(32)
+  revision             Int?
+  created_by           String?   @db.VarChar(32)
+  created_time         DateTime? @default(now()) @db.Timestamp(6)
+  updated_by           String?   @db.VarChar(32)
+  updated_time         DateTime? @db.Timestamp(6)
+  id                   Int       @id @default(autoincrement())
+  notification_message Boolean?
+  notification_sign_in Boolean?
+  notification_news    Boolean?
+  notification_other   Boolean?
+  letter_size          Int?
+  letter_column_space  Int?
+  letter_row_space     Int?
+  user_id              Int?      @unique(map: "user_config_user_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user_coupon {
+  tenant_id      String?   @db.VarChar(32)
+  revision       Int?
+  created_by     String?   @db.VarChar(32)
+  created_time   DateTime? @default(now()) @db.Timestamp(6)
+  updated_by     String?   @db.VarChar(32)
+  updated_time   DateTime? @db.Timestamp(6)
+  id             Int       @id @default(autoincrement())
+  user_id        Int
+  coupon_id      Int
+  effective      DateTime  @db.Timestamp(6)
+  expired        DateTime  @db.Timestamp(6)
+  spent          Boolean?
+  spent_datetime DateTime? @db.Timestamp(6)
+  spent_type     String?   @db.VarChar(90)
+  spent_id       Int?
+
+  @@index([coupon_id], map: "user_coupon_coupon")
+  @@index([user_id], map: "user_coupon_user")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user_credit {
+  tenant_id              String?   @db.VarChar(32)
+  revision               Int?
+  created_by             String?   @db.VarChar(32)
+  created_time           DateTime? @default(now()) @db.Timestamp(6)
+  updated_by             String?   @db.VarChar(32)
+  updated_time           DateTime? @db.Timestamp(6)
+  id                     Int       @id @default(autoincrement())
+  user_id                Int
+  credit                 Int       @default(0)
+  credit_total           Int       @default(0)
+  temporary_credit_total Int       @default(0)
+
+  @@index([user_id], map: "user_credit_user")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user_login_record {
+  tenant_id    String?   @db.VarChar(32)
+  revision     Int?
+  created_by   String?   @db.VarChar(32)
+  created_time DateTime? @default(now()) @db.Timestamp(6)
+  updated_by   String?   @db.VarChar(32)
+  updated_time DateTime? @db.Timestamp(6)
+  id           Int       @id @default(autoincrement())
+  user_id      Int
+  login_method String    @db.VarChar(32)
+  success      Boolean
+  reason       String?   @db.VarChar(255)
+
+  @@index([user_id], map: "login_record_user")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user_task {
+  tenant_id           String?   @db.VarChar(32)
+  revision            Int?
+  created_by          String?   @db.VarChar(32)
+  created_time        DateTime? @default(now()) @db.Timestamp(6)
+  updated_by          String?   @db.VarChar(32)
+  updated_time        DateTime? @db.Timestamp(6)
+  id                  Int       @id @default(autoincrement())
+  user_id             Int?
+  task_id             Int?
+  last_completed_time DateTime? @db.Timestamp(6)
+  frequency           Int?
+
+  @@index([task_id], map: "user_task_task")
+  @@index([user_id], map: "user_task_user")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model word {
+  tenant_id          String?   @db.VarChar(32)
+  revision           Int?
+  created_by         String?   @db.VarChar(32)
+  created_time       DateTime? @default(now()) @db.Timestamp(6)
+  updated_by         String?   @db.VarChar(32)
+  updated_time       DateTime? @db.Timestamp(6)
+  id                 Int       @id @default(autoincrement())
+  word               String    @db.VarChar(90)
+  pos                String?   @db.VarChar(255)
+  tense              String?   @db.VarChar(255)
+  phonetic_en        String?   @db.VarChar(90)
+  phonetic_us        String?   @db.VarChar(90)
+  phonetic_en_audio  String?   @db.VarChar(255)
+  phonetic_us_audio  String?   @db.VarChar(255)
+  syllable_splitting String?   @db.VarChar(90)
+  pronunciation      String?   @db.VarChar(255)
+  recommend          String?   @db.VarChar(255)
+  story              String?
+  status             String?   @default("DRAFT") @db.VarChar(32)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model word_book {
+  tenant_id              String?   @db.VarChar(32)
+  revision               Int?
+  created_by             String?   @db.VarChar(32)
+  created_time           DateTime? @db.Timestamp(6)
+  updated_by             String?   @db.VarChar(32)
+  updated_time           DateTime? @db.Timestamp(6)
+  id                     Int       @id @default(autoincrement())
+  word_book_name         String    @db.VarChar(90)
+  cover                  String?   @db.VarChar(255)
+  word_count             Int?
+  student_count          Int?
+  student_count_complete Int?
+  describe               String?   @db.VarChar(255)
+  detail                 String?
+  horizontal_cover       String?   @db.VarChar(255)
+  vertical_cover         String?   @db.VarChar(255)
+
+  @@index([word_book_name], map: "word_book_name_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model word_book_links {
+  tenant_id    String?   @db.VarChar(32)
+  revision     Int?
+  created_by   String?   @db.VarChar(32)
+  created_time DateTime? @db.Timestamp(6)
+  updated_by   String?   @db.VarChar(32)
+  updated_time DateTime? @db.Timestamp(6)
+  id           Int       @id @default(autoincrement())
+  word_id      Int
+  word_book_id Int
+
+  @@index([word_id, word_book_id], map: "word_book_links_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model word_book_users {
+  tenant_id    String?   @db.VarChar(32)
+  revision     Int?
+  created_by   String?   @db.VarChar(32)
+  created_time DateTime? @db.Timestamp(6)
+  updated_by   String?   @db.VarChar(32)
+  updated_time DateTime? @db.Timestamp(6)
+  id           Int       @id @default(autoincrement())
+  word_book_id Int
+  user_id      Int
+  learn_amount Int?
+
+  @@index([word_book_id, user_id], map: "word_book_users_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model word_record {
+  tenant_id    String?   @db.VarChar(32)
+  revision     Int?
+  created_by   String?   @db.VarChar(32)
+  created_time DateTime? @default(now()) @db.Timestamp(6)
+  updated_by   String?   @db.VarChar(32)
+  updated_time DateTime? @db.Timestamp(6)
+  id           Int       @id @default(autoincrement())
+  user_id      Int
+  word_id      Int
+  count        Int       @default(0)
+
+  @@unique([user_id, word_id], map: "word_record_user")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model word_tag {
+  tenant_id     String?   @db.VarChar(32)
+  revision      Int?
+  created_by    String?   @db.VarChar(32)
+  created_time  DateTime? @db.Timestamp(6)
+  updated_by    String?   @db.VarChar(32)
+  updated_time  DateTime? @db.Timestamp(6)
+  id            Int       @id @default(autoincrement())
+  word_tag_name String    @db.VarChar(32)
+  ref_count     Int
+
+  @@index([word_tag_name], map: "word_tag_name_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model word_tag_links {
+  tenant_id    String?   @db.VarChar(32)
+  revision     Int?
+  created_by   String?   @db.VarChar(32)
+  created_time DateTime? @db.Timestamp(6)
+  updated_by   String?   @db.VarChar(32)
+  updated_time DateTime? @db.Timestamp(6)
+  id           Int       @id @default(autoincrement())
+  word_id      Int
+  tag_id       Int
+
+  @@index([word_id, tag_id], map: "word_tag_links_index")
+}

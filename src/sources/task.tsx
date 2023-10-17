@@ -1,0 +1,103 @@
+import { PageCreateor } from '@/core/create-page'
+
+export const taskMetaList: PageCreateor['columns'] = [
+  {
+    title: '任务名称',
+    name: 'task_name',
+    copyable: true,
+    required: true,
+  },
+  {
+    title: '任务标识',
+    name: 'identification',
+    copyable: true,
+    required: true,
+    valueEnum: {
+      NOOB_CEATE_CHAT: '创建聊天频道',
+      NOOB_START_CHAT: '开始对话',
+      NOOB_PLAY_ADUIO: '完成播放音频',
+      NOOB_SENTENCE_TRANSLATE: '完成语句翻译',
+      NOOB_GRAMMAR_ANALYSIS: '完成语法解析',
+      NOOB_TEACH_REPLY: '完成帮我回复',
+      NOOB_TEN_CHAT: '完成十条对话',
+      NOOB_SHARE: '进行分享',
+      NOOB_FEEDBACK: '提交建议反馈',
+      NOOB_RECITE_WORD: '完成单词背诵',
+      NOOB_WORD_CHAT: '完成单词聊天',
+      NOOB_GENERATE_IMAGE: '生成图片',
+      NOOB_READ: '完成阅读',
+      NOOB_COLLECT_WORD: '收藏单词',
+      NOOB_COLLECT_SENTENCE: '收藏句子',
+      NOOB_SHOW_ACHIEVE: '展示成就',
+      NOOB_ALL_SETTINGS: '完成全部个人资料设置',
+      NOOB_DAILY_CHECK: '完成每日签到',
+    },
+  },
+  {
+    title: '任务类型',
+    name: 'task_type',
+    disabledInEdit: true,
+    required: true,
+    valueEnum: {
+      DAILY: '每日任务',
+      TIMED: '定时任务',
+      ONCE: '一次性任务',
+      RECURRENT: '循环任务',
+    },
+  },
+  {
+    title: '任务奖励类型',
+    name: 'reward_type',
+    disabledInEdit: true,
+    hideInSearch: true,
+    required: true,
+    valueEnum: {
+      CREDIT: '竹简',
+    },
+  },
+  {
+    title: '任务奖励数量',
+    name: 'quantity',
+    hideInSearch: true,
+    disabledInEdit: true,
+    required: true,
+    valueType: 'digit',
+  },
+  {
+    title: '任务开始时间',
+    name: 'start_time',
+    valueType: 'dateTime',
+    disabledInEdit: true,
+    required: true,
+    hideInSearch: true,
+  },
+  {
+    title: '任务结束时间',
+    name: 'end_time',
+    valueType: 'dateTime',
+    disabledInEdit: true,
+    required: true,
+    hideInSearch: true,
+  },
+  {
+    title: '任务状态',
+    name: 'task_status',
+    hideInForm: true,
+    valueEnum: {
+      ENABLED: {
+        text: '已发布',
+        status: 'Success',
+      },
+      DISABLED: {
+        text: '未发布',
+        status: 'Error',
+      },
+    },
+  },
+  {
+    hideInSearch: true,
+    hideInTable: true,
+    title: '指引 url',
+    name: 'guide_url',
+  },
+]
