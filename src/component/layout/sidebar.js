@@ -29,11 +29,11 @@ const sidebar = {
         name: '用户管理',
         icon: <UserSwitchOutlined />,
         routes: [
-          {
-            path: '/dashboard/user/dashboard',
-            name: '仪表盘',
-            icon: <DashboardOutlined />,
-          },
+          // {
+          //   path: '/dashboard/user/dashboard',
+          //   name: '仪表盘',
+          //   icon: <DashboardOutlined />,
+          // },
           {
             path: '/dashboard/user/user',
             name: '用户管理',
@@ -56,18 +56,18 @@ const sidebar = {
         name: '支付管理',
         icon: <PayCircleOutlined />,
         routes: [
+          // {
+          //   path: '/dashboard/payment/dashboard',
+          //   name: '仪表盘',
+          //   icon: <DashboardOutlined />,
+          // },
           {
-            path: '/dashboard/payment/dashboard',
-            name: '仪表盘',
-            icon: <DashboardOutlined />,
-          },
-          {
-            path: '/dashboard/payment/credit',
+            path: '/dashboard/payment/credit-plan',
             name: '竹简管理',
             icon: <CreditCardOutlined />,
           },
           {
-            path: '/dashboard/payment/member',
+            path: '/dashboard/payment/membership-plan',
             name: '会员管理',
             icon: <MailOutlined />,
           },
@@ -78,11 +78,11 @@ const sidebar = {
         name: '消息管理',
         icon: <MessageOutlined />,
         routes: [
-          {
-            path: '/dashboard/message/dashboard',
-            name: '仪表盘',
-            icon: <DashboardOutlined />,
-          },
+          // {
+          //   path: '/dashboard/message/dashboard',
+          //   name: '仪表盘',
+          //   icon: <DashboardOutlined />,
+          // },
           {
             path: '/dashboard/message/push',
             name: '通知推送',
@@ -100,12 +100,11 @@ const sidebar = {
         name: '内容管理',
         icon: <FieldStringOutlined />,
         routes: [
-          {
-            path: '/dashboard/content/dashboard',
-            name: '仪表盘',
-
-            icon: <DashboardOutlined />,
-          },
+          // {
+          //   path: '/dashboard/content/dashboard',
+          //   name: '仪表盘',
+          //   icon: <DashboardOutlined />,
+          // },
           {
             path: '/dashboard/content/wordbook',
             name: '单词本',
@@ -117,7 +116,7 @@ const sidebar = {
             icon: <FilePptOutlined />,
           },
           {
-            path: '/dashboard/message/post',
+            path: '/dashboard/content/post',
             name: '文章管理',
             icon: <FileMarkdownOutlined />,
           },
@@ -128,11 +127,11 @@ const sidebar = {
         name: '聊天管理',
         icon: <WechatOutlined />,
         routes: [
-          {
-            path: '/dashboard/chat/dashboard',
-            name: '仪表盘',
-            icon: <DashboardOutlined />,
-          },
+          // {
+          //   path: '/dashboard/chat/dashboard',
+          //   name: '仪表盘',
+          //   icon: <DashboardOutlined />,
+          // },
           {
             path: '/dashboard/chat/scene',
             name: '场景配置',

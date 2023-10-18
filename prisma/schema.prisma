@@ -27,25 +27,23 @@ model achievement {
   category         String?   @db.VarChar(255)
   is_publish       Boolean   @default(false)
 
-  user_achievements  user_achievement[]
-  achievement_type   achievement_type?  @relation(fields: [achievement_typeId], references: [id])
-  achievement_typeId Int?
+  user_achievements user_achievement[]
+  achievement_type  achievement_type?  @relation(fields: [type_id], references: [id])
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model achievement_type {
-  tenant_id    String?   @db.VarChar(32)
+  tenant_id    String?       @db.VarChar(32)
   revision     Int?
-  created_by   String?   @db.VarChar(32)
-  created_time DateTime? @default(now()) @db.Timestamp(6)
-  updated_by   String?   @db.VarChar(32)
-  updated_time DateTime? @db.Timestamp(6)
-  id           Int       @id @default(autoincrement())
-  name         String?   @unique(map: "type") @db.VarChar(90)
+  created_by   String?       @db.VarChar(32)
+  created_time DateTime?     @default(now()) @db.Timestamp(6)
+  updated_by   String?       @db.VarChar(32)
+  updated_time DateTime?     @db.Timestamp(6)
+  id           Int           @id @default(autoincrement())
+  name         String?       @unique(map: "type") @db.VarChar(90)
   is_summary   Boolean?
-  category     String?   @db.VarChar(255)
-
-  achievements achievement[]
+  category     String?       @db.VarChar(255)
+  achievement  achievement[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -123,6 +121,10 @@ model credit_plan {
   amount          Int
   original_amount Int?
   credit          Int
+  status          String?   @db.VarChar(16)
+
+  record                         credit_plan_payment_record[]
+  membership_plan_payment_record membership_plan_payment_record[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -249,6 +251,10 @@ model membership_plan {
   original_amount       Int?
   discount_end_datetime DateTime? @db.Timestamp(6)
   credit                Int
+  expired               Int?
+  status                String?   @db.VarChar(16)
+
+  record membership_plan_payment_record[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -361,6 +367,8 @@ model post {
   category     String?   @db.VarChar(90)
   sub_category String?   @db.VarChar(90)
   status       String?   @default("DRAFT") @db.VarChar(32)
+
+  paragraphs post_paragraph[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -377,6 +385,8 @@ model post_paragraph {
   content             String?   @db.VarChar(900)
   content_cn          String?   @db.VarChar(900)
   sort                Int?
+  speak_url           String?   @db.VarChar(255)
+  post                post?     @relation(fields: [post_id], references: [id])
 
   @@index([post_id], map: "post_paragraph_post")
 }
@@ -522,6 +532,7 @@ model task {
   task_status    String?   @db.VarChar(32)
   guide_url      String?   @db.VarChar(255)
   identification String?   @db.VarChar
+  category       String?   @db.VarChar(16)
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -562,37 +573,40 @@ model tone {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model user {
-  tenant_id             String?   @db.VarChar(32)
-  revision              Int?
-  created_by            String?   @db.VarChar(32)
-  created_time          DateTime? @default(now()) @db.Timestamp(6)
-  updated_by            String?   @db.VarChar(32)
-  updated_time          DateTime? @db.Timestamp(6)
-  id                    Int       @id @default(autoincrement())
-  nickname              String?   @db.VarChar(32)
-  personal_blurb        String?   @db.VarChar(200)
-  personal_introduction String?
-  gender                String?   @default("UnKnow") @db.VarChar(32)
-  birthday              DateTime? @db.Date
-  province              String?   @db.VarChar(90)
-  city                  String?   @db.VarChar(90)
-  area                  String?   @db.VarChar(90)
-  achievement_score     Int?
-  temporary_credit      Int?
-  membership_level      String?   @db.VarChar(32)
-  membership_expired    DateTime? @db.Timestamp(6)
-  email                 String?   @db.VarChar(255)
-  user_no               String?   @unique(map: "subscriber_number") @db.VarChar(32)
-  inviter               String?   @db.VarChar(32)
-  phone                 String?   @db.VarChar(32)
-  wechat_openid         String?   @db.VarChar(128)
-  wechat_unionid        String?   @db.VarChar(128)
-  password              String?   @db.VarChar(64)
-  status                String?   @default("InActive") @db.VarChar(32)
-  is_paid               Boolean   @default(false)
-  nonce                 String    @db.VarChar(32)
-  role                  String?   @default("USER") @db.VarChar(32)
-  head_portrait         String?   @db.VarChar(255)
+  tenant_id                      String?                          @db.VarChar(32)
+  revision                       Int?
+  created_by                     String?                          @db.VarChar(32)
+  created_time                   DateTime?                        @default(now()) @db.Timestamp(6)
+  updated_by                     String?                          @db.VarChar(32)
+  updated_time                   DateTime?                        @db.Timestamp(6)
+  id                             Int                              @id @default(autoincrement())
+  nickname                       String?                          @db.VarChar(32)
+  personal_blurb                 String?                          @db.VarChar(200)
+  personal_introduction          String?
+  gender                         String?                          @default("UnKnow") @db.VarChar(32)
+  birthday                       DateTime?                        @db.Date
+  province                       String?                          @db.VarChar(90)
+  city                           String?                          @db.VarChar(90)
+  area                           String?                          @db.VarChar(90)
+  achievement_score              Int?
+  temporary_credit               Int?
+  membership_level               String?                          @db.VarChar(32)
+  membership_expired             DateTime?                        @db.Timestamp(6)
+  email                          String?                          @db.VarChar(255)
+  user_no                        String?                          @unique(map: "subscriber_number") @db.VarChar(32)
+  inviter                        String?                          @db.VarChar(32)
+  phone                          String?                          @db.VarChar(32)
+  wechat_openid                  String?                          @db.VarChar(128)
+  wechat_unionid                 String?                          @db.VarChar(128)
+  password                       String?                          @db.VarChar(64)
+  status                         String?                          @default("InActive") @db.VarChar(32)
+  is_paid                        Boolean                          @default(false)
+  nonce                          String                           @db.VarChar(32)
+  role                           String?                          @default("USER") @db.VarChar(32)
+  head_portrait                  String?                          @db.VarChar(255)
+  credit_plan_payment_record     credit_plan_payment_record[]
+  membership_plan_payment_record membership_plan_payment_record[]
+  feedback                       feedback[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -841,4 +855,44 @@ model word_tag_links {
   tag_id       Int
 
   @@index([word_id, tag_id], map: "word_tag_links_index")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model credit_plan_payment_record {
+  id             Int       @id(map: "credit_plan_payment_record_pk")
+  user_id        Int
+  credit_plan_id Int
+  created_time   DateTime? @default(now()) @db.Timestamp(6)
+
+  user        user         @relation(fields: [user_id], references: [id])
+  credit_plan credit_plan? @relation(fields: [credit_plan_id], references: [id])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model membership_plan_payment_record {
+  id                 Int       @id(map: "membership_plan_payment_record_pk")
+  user_id            Int
+  membership_plan_id Int
+  created_time       DateTime? @default(now()) @db.Timestamp(6)
+
+  user            user             @relation(fields: [user_id], references: [id])
+  membership_plan membership_plan? @relation(fields: [membership_plan_id], references: [id])
+  credit_plan     credit_plan?     @relation(fields: [credit_planId], references: [id])
+  credit_planId   Int?
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model feedback {
+  id           Int     @id(map: "feedback_pk") @default(autoincrement())
+  type         String  @db.VarChar(16)
+  content      String?
+  score        Int?
+  source_id    Int?
+  created_time Int?
+  status       String? @db.VarChar(16)
+  reply        String? @db.VarChar(255)
+  user_id      Int?
+  replier      Int?
+
+  user user? @relation(fields: [user_id], references: [id])
 }

@@ -12,12 +12,22 @@ const camSafeUrlEncode = function (str: string) {
 }
 
 // 计算签名
-export const getSTSAuthorization = function () {
-  return axios.get('/api/sts').then((res) => res.data)
+export const getSTSAuthorization = function (ext?: string, category?: string) {
+  return axios.get('/api/sts', { params: { ext, category } }).then((res) => res.data)
 }
 
 // 上传文件
-export const uploadFile = async function (file: RcFile, stsAuthorizationInfo?: any) {
+export const uploadFile = async function ({
+  file,
+  stsAuthorizationInfo,
+  category,
+  onProgress,
+}: {
+  file: RcFile
+  category?: string
+  stsAuthorizationInfo?: any
+  onProgress?: any
+}) {
   const fileName = file.name
   let ext = ''
   const lastDotIndex = fileName.lastIndexOf('.')
@@ -26,7 +36,7 @@ export const uploadFile = async function (file: RcFile, stsAuthorizationInfo?: a
     ext = fileName.substring(lastDotIndex + 1)
   }
 
-  const info = stsAuthorizationInfo ?? await getSTSAuthorization()
+  const info = stsAuthorizationInfo ?? (await getSTSAuthorization(ext, category))
   const auth = info.authorization
   const securityToken = info.securityToken
   const Key = info.cosKey
@@ -39,7 +49,12 @@ export const uploadFile = async function (file: RcFile, stsAuthorizationInfo?: a
   securityToken && xhr.setRequestHeader('x-cos-security-token', securityToken)
   xhr.upload.onprogress = function (e) {
     console.log('上传进度 ' + Math.round((e.loaded / e.total) * 10000) / 100 + '%')
+    if (e.total > 0) {
+      Reflect.set(e, 'percent', (e.loaded / e.total) * 100)
+    }
+    onProgress?.(e)
   }
+
   let resolve: (value: string | PromiseLike<string>) => void, reject: (reason?: any) => void, promise
   promise = new Promise<string>(function (res, rej) {
     resolve = res
@@ -47,7 +62,6 @@ export const uploadFile = async function (file: RcFile, stsAuthorizationInfo?: a
   })
   xhr.onload = function () {
     if (/^2\d\d$/.test('' + xhr.status)) {
-      const ETag = xhr.getResponseHeader('etag')
       resolve(url)
     } else {
       reject('文件 ' + Key + ' 上传失败')

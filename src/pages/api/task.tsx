@@ -55,7 +55,10 @@ export default Controller(
       request.checkAuthorization()
       const { ...other } = request.body
       return prisma.task.create({
-        data: other,
+        data: {
+          ...other,
+          status: 'DISABLED',
+        },
       })
     }
 

@@ -21,8 +21,10 @@ import { getSTSAuthorization, uploadFile } from '@/utils/web-sts'
 import { Rule } from 'antd/lib/form'
 
 export type PageCreateor = {
+  width?: string
   title?: string
   hideOption?: boolean
+  hideCreate?: boolean
   renderDetail?: (record: Record<any, any>) => ReactNode
   renderToolbar?: (action?: ActionType) => ReactNode[]
   columns: (ProColumns &
@@ -56,8 +58,8 @@ export const createPage = (options: PageCreateor) => {
 
     const isPaused = useMemoizedFn(() => !mutableId)
 
-    const { data, isLoading } = useSWR(
-      '/api/achievement?id=' + mutableId,
+    const { data, isLoading, mutate } = useSWR(
+      options.api + '?id=' + mutableId,
       (url) => axios.get(url).then((res) => res.data),
       { isPaused }
     )
@@ -172,8 +174,8 @@ export const createPage = (options: PageCreateor) => {
       const fileEntries = Object.entries(values).filter(
         ([key, value]) => Array.isArray(value) && value.some((item) => Boolean(item.originFileObj))
       )
-      const stsAuthorizationInfo = await getSTSAuthorization()
       if (fileEntries.length) {
+        const stsAuthorizationInfo = await getSTSAuthorization()
         const urlEntries = await Promise.all(
           fileEntries.map(async ([key, value]) => {
             return [
@@ -188,9 +190,8 @@ export const createPage = (options: PageCreateor) => {
                       return
                     }
                     if (item.originFileObj) {
-                      return uploadFile(item.originFileObj, stsAuthorizationInfo)
+                      return uploadFile({ file: item.originFileObj, stsAuthorizationInfo })
                     }
-                    // formData.append(key, item.originFileObj)
                   }) ?? []
                 )
               ).join(','),
@@ -211,7 +212,11 @@ export const createPage = (options: PageCreateor) => {
               description: '编辑时间:' + new Date().toLocaleString(),
             })
             await ref.current?.reloadAndRest?.()
-            updateVisibleMutation(false)
+            mutate()
+            setTimeout(() => {
+              updateVisibleMutation(false)
+              setMutableId(undefined)
+            }, 0)
           })
           .catch(() => {
             notification.error({
@@ -248,7 +253,7 @@ export const createPage = (options: PageCreateor) => {
           <Drawer
             title={`编辑 ${options.title}`}
             placement="right"
-            width="50vw"
+            width={options.width ?? '50vw'}
             onClose={() => updateVisibleMutation(false)}
             open={visibleMutation}
           >
@@ -287,7 +292,7 @@ export const createPage = (options: PageCreateor) => {
             }
             toolBarRender={(action) =>
               [
-                options.hideOption ? null : (
+                options.hideOption || options.hideCreate ? null : (
                   <Button key="create" type="primary" onClick={() => updateVisibleMutation(true)}>
                     <PlusOutlined /> 创建
                   </Button>

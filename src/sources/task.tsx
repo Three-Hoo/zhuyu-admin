@@ -1,4 +1,7 @@
 import { PageCreateor } from '@/core/create-page'
+import { CloudUploadOutlined } from '@ant-design/icons'
+import { Button, Popconfirm } from 'antd'
+import axios from 'axios'
 
 export const taskMetaList: PageCreateor['columns'] = [
   {
@@ -12,25 +15,35 @@ export const taskMetaList: PageCreateor['columns'] = [
     name: 'identification',
     copyable: true,
     required: true,
+    disabledInEdit: true,
     valueEnum: {
-      NOOB_CEATE_CHAT: '创建聊天频道',
-      NOOB_START_CHAT: '开始对话',
-      NOOB_PLAY_ADUIO: '完成播放音频',
-      NOOB_SENTENCE_TRANSLATE: '完成语句翻译',
-      NOOB_GRAMMAR_ANALYSIS: '完成语法解析',
-      NOOB_TEACH_REPLY: '完成帮我回复',
-      NOOB_TEN_CHAT: '完成十条对话',
-      NOOB_SHARE: '进行分享',
-      NOOB_FEEDBACK: '提交建议反馈',
-      NOOB_RECITE_WORD: '完成单词背诵',
-      NOOB_WORD_CHAT: '完成单词聊天',
-      NOOB_GENERATE_IMAGE: '生成图片',
-      NOOB_READ: '完成阅读',
-      NOOB_COLLECT_WORD: '收藏单词',
-      NOOB_COLLECT_SENTENCE: '收藏句子',
-      NOOB_SHOW_ACHIEVE: '展示成就',
-      NOOB_ALL_SETTINGS: '完成全部个人资料设置',
-      NOOB_DAILY_CHECK: '完成每日签到',
+      NOOB_CEATE_CHAT: 'NOOB_CEATE_CHAT',
+      NOOB_START_CHAT: 'NOOB_START_CHAT',
+      NOOB_PLAY_ADUIO: 'NOOB_PLAY_ADUIO',
+      NOOB_SENTENCE_TRANSLATE: 'NOOB_SENTENCE_TRANSLATE',
+      NOOB_GRAMMAR_ANALYSIS: 'NOOB_GRAMMAR_ANALYSIS',
+      NOOB_TEACH_REPLY: 'NOOB_TEACH_REPLY',
+      NOOB_TEN_CHAT: 'NOOB_TEN_CHAT',
+      NOOB_SHARE: 'NOOB_SHARE',
+      NOOB_FEEDBACK: 'NOOB_FEEDBACK',
+      NOOB_RECITE_WORD: 'NOOB_RECITE_WORD',
+      NOOB_WORD_CHAT: 'NOOB_WORD_CHAT',
+      NOOB_GENERATE_IMAGE: 'NOOB_GENERATE_IMAGE',
+      NOOB_READ: 'NOOB_READ',
+      NOOB_COLLECT_WORD: 'NOOB_COLLECT_WORD',
+      NOOB_COLLECT_SENTENCE: 'NOOB_COLLECT_SENTENCE',
+      NOOB_SHOW_ACHIEVE: 'NOOB_SHOW_ACHIEVE',
+      NOOB_ALL_SETTINGS: 'NOOB_ALL_SETTINGS',
+      NOOB_DAILY_CHECK: 'NOOB_DAILY_CHECK',
+    },
+  },
+  {
+    title: '任务分类',
+    name: 'category',
+    required: true,
+    valueEnum: {
+      DAILY: '每日任务',
+      NOOB: '新手任务',
     },
   },
   {
@@ -59,7 +72,6 @@ export const taskMetaList: PageCreateor['columns'] = [
     title: '任务奖励数量',
     name: 'quantity',
     hideInSearch: true,
-    disabledInEdit: true,
     required: true,
     valueType: 'digit',
   },
@@ -67,17 +79,15 @@ export const taskMetaList: PageCreateor['columns'] = [
     title: '任务开始时间',
     name: 'start_time',
     valueType: 'dateTime',
-    disabledInEdit: true,
-    required: true,
     hideInSearch: true,
+    apiValue: (value) => (value ? new Date(value as string) : undefined),
   },
   {
     title: '任务结束时间',
     name: 'end_time',
     valueType: 'dateTime',
-    disabledInEdit: true,
-    required: true,
     hideInSearch: true,
+    apiValue: (value) => (value ? new Date(value as string) : undefined),
   },
   {
     title: '任务状态',
@@ -99,5 +109,30 @@ export const taskMetaList: PageCreateor['columns'] = [
     hideInTable: true,
     title: '指引 url',
     name: 'guide_url',
+  },
+  {
+    title: '操作',
+    valueType: 'option',
+    key: 'option',
+    render: (text, record, _, action) => [
+      <Popconfirm
+        key="deploy"
+        title={`${record.task_status === 'ENABLED' ? '取消' : '发布'}成就`}
+        description={`你确定要${record.task_status === 'ENABLED' ? '下架' : '发布'}该任务吗？`}
+        onConfirm={() =>
+          axios
+            .patch(`/api/task?id=${record.id}`, {
+              task_status: record.task_status === 'ENABLED' ? 'DISABLED' : 'ENABLED',
+            })
+            .then(() => action?.reload())
+        }
+        okText="Yes"
+        cancelText="No"
+      >
+        <Button size="small">
+          <CloudUploadOutlined /> {record.task_status === 'ENABLED' ? '下架' : '发布'}
+        </Button>
+      </Popconfirm>,
+    ],
   },
 ]

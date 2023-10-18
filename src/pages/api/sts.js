@@ -17,11 +17,11 @@ const config = {
   extWhiteList: ['jpg', 'jpeg', 'png', 'gif', 'bmp'],
 }
 
-const generateCosKey = function (ext) {
+const generateCosKey = function (ext, category = 'images') {
   const ymd = moment().format('YYYYMMDD')
   const timeStr = moment().format('YYYYMMDD_HHmmss')
   const rand = ('000000' + Math.random() * 1000000).slice(-6)
-  return `images/${ymd}/IMG_${timeStr}_${rand}.${ext}`
+  return `${category}/${ymd}/IMG_${timeStr}_${rand}.${ext}`
 }
 
 const getTempCredential = async function (cosKey) {
@@ -94,7 +94,7 @@ q-header-list=host&q-url-param-list=&q-signature=${signature}`
 
 const handler = withSessionRoute(async function STSHandler(req, res) {
   const cosHost = `${config.bucket}.cos.${config.region}.myqcloud.com`
-  const cosKey = generateCosKey(req.query.ext ?? 'png')
+  const cosKey = generateCosKey(req.query.ext || 'png', req.query.category)
 
   // 开始获取临时秘钥
   const tempCredential = await getTempCredential(cosKey)
