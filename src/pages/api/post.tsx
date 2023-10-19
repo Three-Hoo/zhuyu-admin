@@ -7,7 +7,6 @@ import { convertionApiValue } from '@/core/create-page'
 import { postMetaList } from '@/sources/post'
 import { omit } from 'lodash'
 import { post_paragraph } from '@prisma/client'
-import { nanoid } from '@ant-design/pro-components'
 
 /**
  * 创建时间：2023/10/16
@@ -48,7 +47,6 @@ export default Controller(
         throw new NotFoundError('文章不存在')
       }
 
-      data.paragraphs = data.paragraphs.map((item) => ({ ...item, client_id: nanoid() }))
       return data
     }
 
@@ -93,12 +91,12 @@ export default Controller(
 
       const post = await prisma.post.create({ data: omit(other, 'paragraphs') })
       await prisma.post_paragraph.createMany({
-        data: paragraphs.map((item) => ({
+        data: paragraphs.map((item, index) => ({
           content: item.content,
           content_cn: item.content_cn,
           post_id: post.id,
           post_paragraph_type: item.post_paragraph_type,
-          sort: item.sort,
+          sort: item.sort ?? index + 1,
           speak_url: item.speak_url,
         })),
       })
@@ -131,82 +129,26 @@ export default Controller(
       request.checkAuthorization()
       const { ...other } = request.body
 
-      const originalParagraphs = await prisma.post_paragraph.findMany({
-        where: { post_id: Number(request.query.id) },
-      })
-
       const paragraphs = other.paragraphs as Array<post_paragraph>
       const hasEmptyParagraph = paragraphs.some((item) => !item.content?.trim())
       if (hasEmptyParagraph) {
         throw new BadRequest('请先清理空内容')
       }
 
-      // 删除
-      const needDeleteParagraphs = originalParagraphs.filter((paragraphs) => {
-        return !other.paragraphs.some((item: post_paragraph) => paragraphs.id === item.id)
-      })
-      if (needDeleteParagraphs.length) {
-        console.log('删除数量:' + needDeleteParagraphs.length)
-        await prisma.post_paragraph.deleteMany({
-          where: { id: { in: needDeleteParagraphs.map((item) => item.id) } },
-        })
-      }
-
-      // 新增
-      const needAddParagraphs = other.paragraphs.filter((item: post_paragraph) => !('id' in item))
-      if (needAddParagraphs.length) {
-        await prisma.post_paragraph.createMany({
-          data: needAddParagraphs.map((item: post_paragraph) => ({
-            content: item.content,
-            content_cn: item.content_cn,
-            post_id: Number(request.query.id),
-            sort: item.sort,
-            post_paragraph_type: item.post_paragraph_type,
-            speak_url: item.speak_url,
-          })),
-        })
-      }
-
-      // 更新
-      const needUpdateParagraphs = other.paragraphs.filter((item: post_paragraph) => {
-        if (!('id' in item)) {
-          return false
-        }
-        const originalParagraph = originalParagraphs.find((paragraphs) => paragraphs.id === item.id)
-        if (
-          originalParagraph?.content !== item.content ||
-          originalParagraph?.content_cn !== item.content_cn ||
-          originalParagraph?.sort !== item.sort ||
-          originalParagraph?.speak_url !== item.speak_url ||
-          originalParagraph?.post_paragraph_type !== item.post_paragraph_type
-        ) {
-          return true
-        }
-        return false
-      })
-      if (needUpdateParagraphs.length) {
-        console.log('更新数量:' + needUpdateParagraphs.length, needUpdateParagraphs)
-        await Promise.all(
-          needUpdateParagraphs.map((item: post_paragraph) => {
-            return prisma.post_paragraph.update({
-              where: { id: item.id },
-              data: {
-                content: item.content,
-                content_cn: item.content_cn,
-                post_id: Number(request.query.id),
-                sort: item.sort,
-                post_paragraph_type: item.post_paragraph_type,
-                speak_url: item.speak_url,
-              },
-            })
-          })
-        )
-      }
-
-      return prisma.post.update({
-        where: { id: Number(request.query.id) },
-        data: omit(other, 'paragraphs'),
-      })
+      const [post] = await prisma.$transaction([
+        prisma.post.update({
+          where: {
+            id: Number(request.query.id),
+          },
+          data: omit(other, 'paragraphs'),
+        }),
+        ...(other.paragraphs?.map((item: post_paragraph, index: number) => {
+          return item.id
+            ? prisma.post_paragraph.update({ where: { id: item.id }, data: { ...item, sort: index + 1 } })
+            : prisma.post_paragraph.create({ data: { ...item, post_id: Number(request.query.id), sort: index + 1 } })
+        }) ?? []),
+      ])
+      return post
     }
 
     /**

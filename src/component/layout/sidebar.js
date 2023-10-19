@@ -14,7 +14,9 @@ import {
   MailOutlined,
   MessageOutlined,
   PayCircleOutlined,
+  SettingOutlined,
   SmileOutlined,
+  SwapOutlined,
   UserSwitchOutlined,
   UsergroupAddOutlined,
   WechatOutlined,
@@ -83,11 +85,11 @@ const sidebar = {
           //   name: '仪表盘',
           //   icon: <DashboardOutlined />,
           // },
-          {
-            path: '/dashboard/message/push',
-            name: '通知推送',
-            icon: <BellOutlined />,
-          },
+          // {
+          //   path: '/dashboard/message/push',
+          //   name: '通知推送',
+          //   icon: <BellOutlined />,
+          // },
           {
             path: '/dashboard/message/feedback',
             name: '用户反馈',
@@ -105,16 +107,16 @@ const sidebar = {
           //   name: '仪表盘',
           //   icon: <DashboardOutlined />,
           // },
-          {
-            path: '/dashboard/content/wordbook',
-            name: '单词本',
-            icon: <FileWordFilled />,
-          },
-          {
-            path: '/dashboard/content/word',
-            name: '单词库',
-            icon: <FilePptOutlined />,
-          },
+          // {
+          //   path: '/dashboard/content/wordbook',
+          //   name: '单词本',
+          //   icon: <FileWordFilled />,
+          // },
+          // {
+          //   path: '/dashboard/content/word',
+          //   name: '单词库',
+          //   icon: <FilePptOutlined />,
+          // },
           {
             path: '/dashboard/content/post',
             name: '文章管理',
@@ -133,27 +135,39 @@ const sidebar = {
           //   icon: <DashboardOutlined />,
           // },
           {
-            path: '/dashboard/chat/scene',
+            path: '/dashboard/chat/scenes-context',
             name: '场景配置',
             icon: <CoffeeOutlined />,
           },
           {
-            path: '/dashboard/chat/role',
+            path: '/dashboard/chat/robot',
             name: '角色管理',
             icon: <SmileOutlined />,
           },
           {
-            path: '/dashboard/chat/present',
+            path: '/dashboard/chat/preset-scenes',
             name: '预设配置',
             icon: <BuildOutlined />,
           },
           {
-            path: '/dashboard/chat/room',
+            path: '/dashboard/chat/channel',
             name: '聊天房间管理',
             icon: <CommentOutlined />,
           },
         ],
       },
+      {
+        path: '/dashboard/system',
+        name: '系统',
+        icon: <SettingOutlined />,
+        routes: [
+          {
+            path: '/dashboard/system/random',
+            name: '随机',
+            icon: <SwapOutlined />,
+          },
+        ]
+      }
     ],
   },
 }

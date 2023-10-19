@@ -16,6 +16,33 @@ export const getSTSAuthorization = function (ext?: string, category?: string) {
   return axios.get('/api/sts', { params: { ext, category } }).then((res) => res.data)
 }
 
+const categoryMap = {
+  png: 'images',
+  jpg: 'images',
+  jpeg: 'images',
+  gif: 'images',
+  mp3: 'audio',
+  mp4: 'video',
+  avi: 'video',
+  wmv: 'video',
+  pdf: 'images',
+  doc: 'images',
+  docx: 'images',
+  ppt: 'images',
+  pptx: 'images',
+  xls: 'images',
+  xlsx: 'images',
+  rar: 'images',
+  zip: 'images',
+  mov: 'video',
+  wav: 'audio',
+  m4a: 'audio',
+  m4v: 'video',
+  ogg: 'audio',
+  flv: 'video',
+  webm: 'video',
+}
+
 // 上传文件
 export const uploadFile = async function ({
   file,
@@ -36,7 +63,9 @@ export const uploadFile = async function ({
     ext = fileName.substring(lastDotIndex + 1)
   }
 
-  const info = stsAuthorizationInfo ?? (await getSTSAuthorization(ext, category))
+  const info =
+    stsAuthorizationInfo ??
+    (await getSTSAuthorization(ext, category ?? categoryMap[ext as keyof typeof categoryMap] ?? 'unknow'))
   const auth = info.authorization
   const securityToken = info.securityToken
   const Key = info.cosKey

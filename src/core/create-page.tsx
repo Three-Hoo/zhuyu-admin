@@ -12,13 +12,15 @@ import {
 import { Button, Drawer, Popconfirm, Spin, UploadProps, notification } from 'antd'
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
 import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { last, merge } from 'lodash'
+import { last, merge, omit } from 'lodash'
 import useSWR from 'swr'
 
 import { useIsClient } from '@uidotdev/usehooks'
 import { useMemoizedFn } from 'ahooks/lib'
 import { getSTSAuthorization, uploadFile } from '@/utils/web-sts'
 import { Rule } from 'antd/lib/form'
+import { useRouter } from 'next/router'
+import { uploadFormMedia } from '@/utils/upload-form-media'
 
 export type PageCreateor = {
   width?: string
@@ -34,7 +36,9 @@ export type PageCreateor = {
       required?: boolean
       apiValue?: (value: unknown) => unknown
     })[]
-  api: string
+  api: string | ((params: Record<string, any>) => string)
+
+  mergeQueryOnFinish?: boolean
 }
 
 export const convertionApiValue = (values: any, columns: PageCreateor['columns']) => {
@@ -50,16 +54,19 @@ export const convertionApiValue = (values: any, columns: PageCreateor['columns']
 
 export const createPage = (options: PageCreateor) => {
   const Page = () => {
+    const router = useRouter()
     const ref = useRef<ActionType>()
     const client = useIsClient()
     const [visibleMutation, updateVisibleMutation] = useState(false)
     const [visibleDescription, updateVisibleDescription] = useState(false)
     const [mutableId, setMutableId] = useState<string>()
-
     const isPaused = useMemoizedFn(() => !mutableId)
+    const api = typeof options.api === 'string' ? options.api : options.api(router.query)
+
+    const queryStartsWith = api.includes('?') ? '&' : '?'
 
     const { data, isLoading, mutate } = useSWR(
-      options.api + '?id=' + mutableId,
+      api + queryStartsWith + 'id=' + mutableId,
       (url) => axios.get(url).then((res) => res.data),
       { isPaused }
     )
@@ -94,7 +101,7 @@ export const createPage = (options: PageCreateor) => {
           key="delete"
           title="删除成就"
           description="你确定要删除该成就吗？"
-          onConfirm={() => axios.delete(options.api + '?id=' + record.id).then(() => action?.reload())}
+          onConfirm={() => axios.delete(api + '?id=' + record.id).then(() => action?.reload())}
           okText="Yes"
           cancelText="No"
         >
@@ -171,41 +178,17 @@ export const createPage = (options: PageCreateor) => {
     }, [commonAction, client, mutableId])
 
     const onFinish = useMemoizedFn(async (values) => {
-      const fileEntries = Object.entries(values).filter(
-        ([key, value]) => Array.isArray(value) && value.some((item) => Boolean(item.originFileObj))
-      )
-      if (fileEntries.length) {
-        const stsAuthorizationInfo = await getSTSAuthorization()
-        const urlEntries = await Promise.all(
-          fileEntries.map(async ([key, value]) => {
-            return [
-              key,
-              (
-                await Promise.all(
-                  (value as UploadProps['fileList'])?.map(async (item) => {
-                    if (item.url && !item.originFileObj) {
-                      return item.url
-                    }
-                    if (!item.url && !item.originFileObj) {
-                      return
-                    }
-                    if (item.originFileObj) {
-                      return uploadFile({ file: item.originFileObj, stsAuthorizationInfo })
-                    }
-                  }) ?? []
-                )
-              ).join(','),
-            ]
-          })
-        )
-        values = merge({}, values, Object.fromEntries(urlEntries))
-      }
-
+      values = await uploadFormMedia(values)
       values = convertionApiValue(values, columns)
+      values = omit(values, 'api')
+
+      if (options.mergeQueryOnFinish) {
+        values = merge(values, router.query)
+      }
 
       if (mutableId) {
         return axios
-          .put(`${options.api}?id=${mutableId}`, values)
+          .put(`${api}${queryStartsWith}id=${mutableId}`, values)
           .then(async () => {
             notification.info({
               message: `编辑${options.title}成功`,
@@ -225,8 +208,9 @@ export const createPage = (options: PageCreateor) => {
             })
           })
       }
+
       return axios
-        .post(options.api, values)
+        .post(api, values)
         .then(async () => {
           notification.info({
             message: `创建${options.title}成功`,
@@ -253,11 +237,11 @@ export const createPage = (options: PageCreateor) => {
           <Drawer
             title={`编辑 ${options.title}`}
             placement="right"
-            width={options.width ?? '50vw'}
+            width={options.width ?? '80vw'}
             onClose={() => updateVisibleMutation(false)}
             open={visibleMutation}
           >
-            {mutableId ? (
+            {!visibleMutation ? null : mutableId ? (
               <Spin spinning={isLoading}>
                 {!data ? null : (
                   <BetaSchemaForm
@@ -288,7 +272,7 @@ export const createPage = (options: PageCreateor) => {
             columns={columns}
             search={{ collapsed: false }}
             request={(params) =>
-              axios.get(options.api, { params: convertionApiValue(params, columns) }).then((res) => res.data.data)
+              axios.get(api, { params: convertionApiValue(params, columns) }).then((res) => res.data.data)
             }
             toolBarRender={(action) =>
               [

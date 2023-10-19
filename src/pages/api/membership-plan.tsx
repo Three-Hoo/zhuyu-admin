@@ -41,7 +41,7 @@ export default Controller(
         include: {
           _count: {
             select: {
-              record: true,
+              records: true,
             },
           },
         },

@@ -43,30 +43,34 @@ model achievement_type {
   name         String?       @unique(map: "type") @db.VarChar(90)
   is_summary   Boolean?
   category     String?       @db.VarChar(255)
-  achievement  achievement[]
+  achievements achievement[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model channel {
-  tenant_id             String?   @db.VarChar(32)
+  tenant_id             String?         @db.VarChar(32)
   revision              Int?
-  created_by            String?   @db.VarChar(32)
-  created_time          DateTime? @default(now()) @db.Timestamp(6)
-  updated_by            String?   @db.VarChar(32)
-  updated_time          DateTime? @db.Timestamp(6)
-  id                    Int       @id @default(autoincrement())
-  channel_name          String?   @db.VarChar(90)
-  avatar                String?   @db.VarChar(255)
+  created_by            String?         @db.VarChar(32)
+  created_time          DateTime?       @default(now()) @db.Timestamp(6)
+  updated_by            String?         @db.VarChar(32)
+  updated_time          DateTime?       @db.Timestamp(6)
+  id                    Int             @id @default(autoincrement())
+  channel_name          String?         @db.VarChar(90)
+  avatar                String?         @db.VarChar(255)
   scene_id              Int?
+  scene                 scenes?         @relation(fields: [scene_id], references: [id])
   scene_context_id      Int?
+  scene_context         scenes_context? @relation(fields: [scene_context_id], references: [id])
   robot_id              Int?
+  robot                 robot?          @relation(fields: [robot_id], references: [id])
   speed                 Int?
-  complexity            String?   @db.VarChar(90)
+  complexity            String?         @db.VarChar(90)
   is_public             Boolean?
   auto_play_audio_self  Boolean?
   auto_play_audio_other Boolean?
-  last_message          String?   @db.VarChar(255)
-  type                  String?   @db.VarChar(90)
+  last_message          String?         @db.VarChar(255)
+  type                  String?         @db.VarChar(90)
+  message               message[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -123,8 +127,8 @@ model credit_plan {
   credit          Int
   status          String?   @db.VarChar(16)
 
-  record                         credit_plan_payment_record[]
-  membership_plan_payment_record membership_plan_payment_record[]
+  records                         credit_plan_payment_record[]
+  membership_plan_payment_records membership_plan_payment_record[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -254,7 +258,7 @@ model membership_plan {
   expired               Int?
   status                String?   @db.VarChar(16)
 
-  record membership_plan_payment_record[]
+  records membership_plan_payment_record[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -286,6 +290,7 @@ model message {
   updated_time     DateTime? @db.Timestamp(6)
   id               Int       @id @default(autoincrement())
   channel_id       Int
+  channel          channel?  @relation(fields: [channel_id], references: [id])
   message_type     String    @db.VarChar(90)
   original_content String    @db.VarChar(900)
   content          String?   @db.VarChar(900)
@@ -420,7 +425,7 @@ model preset_scenes {
   preset_scenes_description String?   @db.VarChar(255)
   preset_scenes_image       String?   @db.VarChar(255)
   speed                     Int?
-  complexity                Int?
+  complexity                String?   @db.VarChar(90)
   robot_id                  Int?
   tone_id                   Int?
   scene_id                  Int?
@@ -445,55 +450,68 @@ model robot {
   robot_name           String?   @db.VarChar(32)
   personal_blurb       String?   @db.VarChar(900)
   age                  Int?
+  styledegree          Int?
+  rate                 Int?
+  tones                tone[]
+  channels             channel[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model scene_context_reminder {
-  tenant_id         String?   @db.VarChar(32)
+  tenant_id         String?         @db.VarChar(32)
   revision          Int?
-  created_by        String?   @db.VarChar(32)
-  created_time      DateTime? @default(now()) @db.Timestamp(6)
-  updated_by        String?   @db.VarChar(32)
-  updated_time      DateTime? @db.Timestamp(6)
-  id                Int       @id @default(autoincrement())
+  created_by        String?         @db.VarChar(32)
+  created_time      DateTime?       @default(now()) @db.Timestamp(6)
+  updated_by        String?         @db.VarChar(32)
+  updated_time      DateTime?       @db.Timestamp(6)
+  id                Int             @id @default(autoincrement())
   scenes_context_id Int?
-  reminder          String?   @db.VarChar(255)
-  reminder_cn       String?   @db.VarChar(255)
-  type              String?   @db.VarChar(90)
+  reminder          String?         @db.VarChar(255)
+  reminder_cn       String?         @db.VarChar(255)
+  type              String?         @db.VarChar(90)
+  scenes_context    scenes_context? @relation(fields: [scenes_context_id], references: [id])
 
   @@index([scenes_context_id], map: "scene_context_reminder_context")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model scenes {
-  tenant_id    String?   @db.VarChar(32)
-  revision     Int?
-  created_by   String?   @db.VarChar(32)
-  created_time DateTime? @default(now()) @db.Timestamp(6)
-  updated_by   String?   @db.VarChar(32)
-  updated_time DateTime? @db.Timestamp(6)
-  id           Int       @id @default(autoincrement())
-  scenes_name  String    @db.VarChar(90)
-  icon         String?   @db.VarChar(255)
-  sort         Int?
-  scenes_value String?   @db.VarChar(32)
+  tenant_id       String?          @db.VarChar(32)
+  revision        Int?
+  created_by      String?          @db.VarChar(32)
+  created_time    DateTime?        @default(now()) @db.Timestamp(6)
+  updated_by      String?          @db.VarChar(32)
+  updated_time    DateTime?        @db.Timestamp(6)
+  id              Int              @id @default(autoincrement())
+  scenes_name     String           @db.VarChar(90)
+  icon            String?          @db.VarChar(255)
+  sort            Int?
+  scenes_value    String?          @db.VarChar(32)
+  scenes_contexts scenes_context[]
+  channels        channel[]
 
   @@index([sort], map: "scenes_sort")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model scenes_context {
-  tenant_id                     String?   @db.VarChar(32)
-  revision                      Int?
-  created_by                    String?   @db.VarChar(32)
-  created_time                  DateTime? @default(now()) @db.Timestamp(6)
-  updated_by                    String?   @db.VarChar(32)
-  updated_time                  DateTime? @db.Timestamp(6)
-  id                            Int       @id @default(autoincrement())
-  scenes_context_description    String?   @db.VarChar(900)
-  scenes_context_description_cn String?   @db.VarChar(900)
-  prompt                        String?   @db.VarChar(900)
-  scenes_id                     Int?
+  tenant_id                        String?   @db.VarChar(32)
+  revision                         Int?
+  created_by                       String?   @db.VarChar(32)
+  created_time                     DateTime? @default(now()) @db.Timestamp(6)
+  updated_by                       String?   @db.VarChar(32)
+  updated_time                     DateTime? @db.Timestamp(6)
+  id                               Int       @id @default(autoincrement())
+  scenes_context_description       String?   @db.VarChar(900)
+  scenes_context_description_cn    String?   @db.VarChar(900)
+  short_scenes_context_description String?   @db.VarChar(32)
+  prompt                           String?   @db.VarChar(900)
+  scenes_id                        Int?
+  scene                            scenes?   @relation(fields: [scenes_id], references: [id])
+
+  scene_context_reminders scene_context_reminder[]
+  scene_context_guides    scene_context_guide[]
+  channels                channel[]
 
   @@index([scenes_id], map: "scenes_context_scene")
 }
@@ -567,46 +585,48 @@ model tone {
   is_general            Boolean?
   microsoft_voice_style String?   @db.VarChar(90)
   guide                 String?   @db.VarChar(255)
+  styledegree           Int?
+  robot                 robot?    @relation(fields: [robot_id], references: [id])
 
   @@index([robot_id], map: "tone_robot")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model user {
-  tenant_id                      String?                          @db.VarChar(32)
-  revision                       Int?
-  created_by                     String?                          @db.VarChar(32)
-  created_time                   DateTime?                        @default(now()) @db.Timestamp(6)
-  updated_by                     String?                          @db.VarChar(32)
-  updated_time                   DateTime?                        @db.Timestamp(6)
-  id                             Int                              @id @default(autoincrement())
-  nickname                       String?                          @db.VarChar(32)
-  personal_blurb                 String?                          @db.VarChar(200)
-  personal_introduction          String?
-  gender                         String?                          @default("UnKnow") @db.VarChar(32)
-  birthday                       DateTime?                        @db.Date
-  province                       String?                          @db.VarChar(90)
-  city                           String?                          @db.VarChar(90)
-  area                           String?                          @db.VarChar(90)
-  achievement_score              Int?
-  temporary_credit               Int?
-  membership_level               String?                          @db.VarChar(32)
-  membership_expired             DateTime?                        @db.Timestamp(6)
-  email                          String?                          @db.VarChar(255)
-  user_no                        String?                          @unique(map: "subscriber_number") @db.VarChar(32)
-  inviter                        String?                          @db.VarChar(32)
-  phone                          String?                          @db.VarChar(32)
-  wechat_openid                  String?                          @db.VarChar(128)
-  wechat_unionid                 String?                          @db.VarChar(128)
-  password                       String?                          @db.VarChar(64)
-  status                         String?                          @default("InActive") @db.VarChar(32)
-  is_paid                        Boolean                          @default(false)
-  nonce                          String                           @db.VarChar(32)
-  role                           String?                          @default("USER") @db.VarChar(32)
-  head_portrait                  String?                          @db.VarChar(255)
-  credit_plan_payment_record     credit_plan_payment_record[]
-  membership_plan_payment_record membership_plan_payment_record[]
-  feedback                       feedback[]
+  tenant_id                       String?                          @db.VarChar(32)
+  revision                        Int?
+  created_by                      String?                          @db.VarChar(32)
+  created_time                    DateTime?                        @default(now()) @db.Timestamp(6)
+  updated_by                      String?                          @db.VarChar(32)
+  updated_time                    DateTime?                        @db.Timestamp(6)
+  id                              Int                              @id @default(autoincrement())
+  nickname                        String?                          @db.VarChar(32)
+  personal_blurb                  String?                          @db.VarChar(200)
+  personal_introduction           String?
+  gender                          String?                          @default("UnKnow") @db.VarChar(32)
+  birthday                        DateTime?                        @db.Date
+  province                        String?                          @db.VarChar(90)
+  city                            String?                          @db.VarChar(90)
+  area                            String?                          @db.VarChar(90)
+  achievement_score               Int?
+  temporary_credit                Int?
+  membership_level                String?                          @db.VarChar(32)
+  membership_expired              DateTime?                        @db.Timestamp(6)
+  email                           String?                          @db.VarChar(255)
+  user_no                         String?                          @unique(map: "subscriber_number") @db.VarChar(32)
+  inviter                         String?                          @db.VarChar(32)
+  phone                           String?                          @db.VarChar(32)
+  wechat_openid                   String?                          @db.VarChar(128)
+  wechat_unionid                  String?                          @db.VarChar(128)
+  password                        String?                          @db.VarChar(64)
+  status                          String?                          @default("InActive") @db.VarChar(32)
+  is_paid                         Boolean                          @default(false)
+  nonce                           String                           @db.VarChar(32)
+  role                            String?                          @default("USER") @db.VarChar(32)
+  head_portrait                   String?                          @db.VarChar(255)
+  credit_plan_payment_records     credit_plan_payment_record[]
+  membership_plan_payment_records membership_plan_payment_record[]
+  feedbacks                       feedback[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -621,8 +641,7 @@ model user_achievement {
   user_id        Int?
   achievement_id Int?
   activate_date  DateTime?    @db.Date
-  achievement    achievement? @relation(fields: [achievementId], references: [id])
-  achievementId  Int?
+  achievement    achievement? @relation(fields: [achievement_id], references: [id])
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -895,4 +914,16 @@ model feedback {
   replier      Int?
 
   user user? @relation(fields: [user_id], references: [id])
+}
+
+model scene_context_guide {
+  id               Int       @id(map: "scene_context_guide_pk") @default(autoincrement())
+  scene_context_id Int
+  guide            String    @db.VarChar(255)
+  created_by       String?   @db.VarChar(32)
+  created_time     DateTime? @default(now()) @db.Timestamp(6)
+  updated_by       String?   @db.VarChar(32)
+  updated_time     DateTime? @db.Timestamp(6)
+
+  scene_context scenes_context? @relation(fields: [scene_context_id], references: [id])
 }

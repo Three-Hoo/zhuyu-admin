@@ -45,7 +45,7 @@ export const membershipPlanMetaList: PageCreateor['columns'] = [
   },
   {
     title: '被购买次数',
-    dataIndex: ['_count', 'record'],
+    dataIndex: ['_count', 'records'],
     valueType: 'digit',
     hideInSearch: true,
     hideInForm: true,

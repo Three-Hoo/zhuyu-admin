@@ -1,30 +1,4 @@
-import pgLib from 'pg-promise'
 import { PrismaClient } from '@prisma/client'
-
-export function createSingleton(name, create) {
-  const s = Symbol.for(name)
-  let scope = global[s]
-  if (!scope) {
-    scope = { ...create() }
-    global[s] = scope
-  }
-  return scope
-}
-
-export function getDB() {
-  return createSingleton('my-app-db-space', () => {
-    const pgp = pgLib()
-    return {
-      db: pgp(process.env.DB_URL),
-      pgp: pgp,
-    }
-  })
-}
-
-const dbInst = getDB()
-
-export const db = dbInst.db
-export const pgp = dbInst.pgp
 
 const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient

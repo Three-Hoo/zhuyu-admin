@@ -5,15 +5,15 @@ import { BadRequest, UnSupportMethodError } from '@/core/api_error'
 import { paginator } from '@/utils/paginator'
 import { convertionApiValue } from '@/core/create-page'
 import { omit } from 'lodash'
-import { {{ camelCase name }}MetaList } from '@/sources/{{ dashCase name }}'
+import { toneMetaList } from '@/sources/tone'
 
 /**
  * 创建时间：2023/10/16
  * 作者：xinouyang
- * restful api for {{ name }}
+ * restful api for tone
  */
 export default Controller(
-  class {{ pascalCase name }} {
+  class Tone {
     /**
      * Executes a GET request.
      *
@@ -24,52 +24,52 @@ export default Controller(
       if (!Number(request.query.id)) {
         throw new BadRequest('参数错误')
       }
-      return prisma.{{ snakeCase name }}.findFirst({ where: { id: Number(request.query.id) } })
+      return prisma.tone.findFirst({ where: { id: Number(request.query.id) } })
     }
 
     /**
-     * Retrieves a list of {{ snakeCase name }} types based on the specified category.
+     * Retrieves a list of tone types based on the specified category.
      *
      * @param {NextApiRequest} request - The request object.
      * @param {NextApiResponse} res - The response object.
-     * @return  The list of {{ snakeCase name }}.
+     * @return  The list of tone.
      */
     async GET_LIST(request: NextApiRequest) {
       request.checkAuthorization()
       const { current, pageSize, ...query } = request.query
 
-      return paginator(prisma.{{ snakeCase name }}, prisma.{{ snakeCase name }}.findMany, {
+      return paginator(prisma.tone, prisma.tone.findMany, {
         include: {},
-        where: convertionApiValue(query, {{ camelCase name }}MetaList),
+        where: convertionApiValue(query, toneMetaList),
         current: Number(current) || 1,
         pageSize: Number(pageSize) || 20,
       })
     }
 
     /**
-     * Creates a new {{ snakeCase name }} type.
+     * Creates a new tone type.
      *
      * @param {NextApiRequest} request - the HTTP request object
-     * @return - a promise that resolves to the newly created {{ snakeCase name }}
+     * @return - a promise that resolves to the newly created tone
      */
     async POST(request: NextApiRequest) {
       request.checkAuthorization()
       const { ...other } = request.body
-      return prisma.{{ snakeCase name }}.create({
+      return prisma.tone.create({
         data: other,
       })
     }
 
     /**
-     * Updates an {{ snakeCase name }} type based on the specified ID.
+     * Updates an tone type based on the specified ID.
      *
      * @param {NextApiRequest} request - The HTTP request object.
-     * @return  - A promise that resolves to the updated {{ snakeCase name }}.
+     * @return  - A promise that resolves to the updated tone.
      */
     async PATCH(request: NextApiRequest) {
       request.checkAuthorization()
       const { ...other } = request.body
-      return prisma.{{ snakeCase name }}.update({
+      return prisma.tone.update({
         where: { id: Number(request.query.id) },
         data: other,
       })
@@ -85,8 +85,8 @@ export default Controller(
       request.checkAuthorization()
       const { ...other } = request.body
 
-      const [{{ snakeCase name }}] = await prisma.$transaction([
-        prisma.{{ snakeCase name }}.update({
+      const [tone] = await prisma.$transaction([
+        prisma.tone.update({
           where: { id: Number(request.query.id) },
           data: omit(
             other
@@ -100,24 +100,24 @@ export default Controller(
         // }) ?? []),
       ])
 
-      return {{ snakeCase name }}
+      return tone
     }
 
     /**
      * Delete function that handles HTTP DELETE requests.
      *
      * @param {NextApiRequest} request - The request object.
-     * @return - A promise that resolves to the deleted {{ snakeCase name }} type.
+     * @return - A promise that resolves to the deleted tone type.
      */
     async DELETE(request: NextApiRequest) {
       request.checkAuthorization()
 
-      // await prisma.{{ snakeCase name }}.update({
+      // await prisma.tone.update({
       //   where: { id: Number(request.query.id) },
       //   data: { #child#: { deleteMany: {} } },
       // })
 
-      return prisma.{{ snakeCase name }}.delete({ where: { id: Number(request.query.id) } })
+      return prisma.tone.delete({ where: { id: Number(request.query.id) } })
     }
   }
 )

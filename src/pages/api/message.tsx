@@ -5,15 +5,15 @@ import { BadRequest, UnSupportMethodError } from '@/core/api_error'
 import { paginator } from '@/utils/paginator'
 import { convertionApiValue } from '@/core/create-page'
 import { omit } from 'lodash'
-import { {{ camelCase name }}MetaList } from '@/sources/{{ dashCase name }}'
+import { messageMetaList } from '@/sources/message'
 
 /**
  * 创建时间：2023/10/16
  * 作者：xinouyang
- * restful api for {{ name }}
+ * restful api for message
  */
 export default Controller(
-  class {{ pascalCase name }} {
+  class Message {
     /**
      * Executes a GET request.
      *
@@ -24,52 +24,54 @@ export default Controller(
       if (!Number(request.query.id)) {
         throw new BadRequest('参数错误')
       }
-      return prisma.{{ snakeCase name }}.findFirst({ where: { id: Number(request.query.id) } })
+      return prisma.message.findFirst({ where: { id: Number(request.query.id) } })
     }
 
     /**
-     * Retrieves a list of {{ snakeCase name }} types based on the specified category.
+     * Retrieves a list of message types based on the specified category.
      *
      * @param {NextApiRequest} request - The request object.
      * @param {NextApiResponse} res - The response object.
-     * @return  The list of {{ snakeCase name }}.
+     * @return  The list of message.
      */
     async GET_LIST(request: NextApiRequest) {
       request.checkAuthorization()
       const { current, pageSize, ...query } = request.query
 
-      return paginator(prisma.{{ snakeCase name }}, prisma.{{ snakeCase name }}.findMany, {
-        include: {},
-        where: convertionApiValue(query, {{ camelCase name }}MetaList),
+      return paginator(prisma.message, prisma.message.findMany, {
+        include: {
+          channel: { select: { channel_name: true } },
+        },
+        where: convertionApiValue(query, messageMetaList),
         current: Number(current) || 1,
         pageSize: Number(pageSize) || 20,
       })
     }
 
     /**
-     * Creates a new {{ snakeCase name }} type.
+     * Creates a new message type.
      *
      * @param {NextApiRequest} request - the HTTP request object
-     * @return - a promise that resolves to the newly created {{ snakeCase name }}
+     * @return - a promise that resolves to the newly created message
      */
     async POST(request: NextApiRequest) {
       request.checkAuthorization()
       const { ...other } = request.body
-      return prisma.{{ snakeCase name }}.create({
-        data: other,
+      return prisma.message.create({
+        data: convertionApiValue(other, messageMetaList) as any,
       })
     }
 
     /**
-     * Updates an {{ snakeCase name }} type based on the specified ID.
+     * Updates an message type based on the specified ID.
      *
      * @param {NextApiRequest} request - The HTTP request object.
-     * @return  - A promise that resolves to the updated {{ snakeCase name }}.
+     * @return  - A promise that resolves to the updated message.
      */
     async PATCH(request: NextApiRequest) {
       request.checkAuthorization()
       const { ...other } = request.body
-      return prisma.{{ snakeCase name }}.update({
+      return prisma.message.update({
         where: { id: Number(request.query.id) },
         data: other,
       })
@@ -85,11 +87,11 @@ export default Controller(
       request.checkAuthorization()
       const { ...other } = request.body
 
-      const [{{ snakeCase name }}] = await prisma.$transaction([
-        prisma.{{ snakeCase name }}.update({
+      const [message] = await prisma.$transaction([
+        prisma.message.update({
           where: { id: Number(request.query.id) },
           data: omit(
-            other
+            convertionApiValue(other, messageMetaList) as any
             // '#child#'
           ),
         }),
@@ -100,24 +102,24 @@ export default Controller(
         // }) ?? []),
       ])
 
-      return {{ snakeCase name }}
+      return message
     }
 
     /**
      * Delete function that handles HTTP DELETE requests.
      *
      * @param {NextApiRequest} request - The request object.
-     * @return - A promise that resolves to the deleted {{ snakeCase name }} type.
+     * @return - A promise that resolves to the deleted message type.
      */
     async DELETE(request: NextApiRequest) {
       request.checkAuthorization()
 
-      // await prisma.{{ snakeCase name }}.update({
+      // await prisma.message.update({
       //   where: { id: Number(request.query.id) },
       //   data: { #child#: { deleteMany: {} } },
       // })
 
-      return prisma.{{ snakeCase name }}.delete({ where: { id: Number(request.query.id) } })
+      return prisma.message.delete({ where: { id: Number(request.query.id) } })
     }
   }
 )
