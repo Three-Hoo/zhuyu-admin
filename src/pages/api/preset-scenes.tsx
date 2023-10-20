@@ -37,9 +37,13 @@ export default Controller(
     async GET_LIST(request: NextApiRequest) {
       request.checkAuthorization()
       const { current, pageSize, ...query } = request.query
-
       return paginator(prisma.preset_scenes, prisma.preset_scenes.findMany, {
-        include: {},
+        include: {
+          scene_context: true,
+          scene: true,
+          tone: true,
+          robot: true,
+        },
         where: convertionApiValue(query, presetScenesMetaList),
         current: Number(current) || 1,
         pageSize: Number(pageSize) || 20,

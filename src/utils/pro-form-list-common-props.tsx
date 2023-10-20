@@ -1,9 +1,9 @@
-import { ProSchema, UseEditableUtilType } from '@ant-design/pro-components'
+import { PageCreateor } from '@/core/create-page'
+import { ProSchema } from '@ant-design/pro-components'
 import { FormInstance } from 'antd'
 import { RuleObject } from 'antd/es/form'
 import axios from 'axios'
-import { noop } from 'lodash'
-import React, { CSSProperties, Component } from 'react'
+import React, { CSSProperties } from 'react'
 
 export type ProFormListParams = [ProSchema, unknown, FormInstance]
 
@@ -65,4 +65,23 @@ export const useParseProFormListParams = (props: { params: ProFormListParams }) 
   const fieldValues = props.params[2].getFieldsValue(props.params[0].dependencies ?? [])
 
   return { fieldValues }
+}
+
+export const showColumnInTableWithIdColumn = (namePath: string[], column: PageCreateor['columns'][number], customColumn?: PageCreateor['columns'][number]) => {
+  return [
+    {
+      ...column,
+      hideInTable: true,
+    }, 
+    {
+      ...column,
+      hideInForm: true,
+      hideInSearch: true,
+      renderFormItem: undefined,
+      request: undefined,
+      required: false,
+      name: namePath,
+      ...customColumn,
+    }
+  ] as PageCreateor['columns']
 }

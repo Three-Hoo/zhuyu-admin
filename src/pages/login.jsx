@@ -52,7 +52,7 @@ export const getServerSideProps = withSessionSsr(({ req }) => {
   if (user && user.expires > Date.now()) {
     return {
       redirect: {
-        destination: '/dashboard',
+        destination: '/dashboard/user/user',
         permanent: false,
       },
     }

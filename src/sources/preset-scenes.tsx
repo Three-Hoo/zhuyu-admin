@@ -3,6 +3,7 @@ import { robot, scenes, scenes_context, tone } from '@prisma/client'
 import axios from 'axios'
 import { VOICE_STYLE_MAP } from './value-enum/voice-style'
 import { IconUploader } from '@/component/icon-uploader'
+import { showColumnInTableWithIdColumn } from '@/utils/pro-form-list-common-props'
 
 export const presetScenesMetaList: PageCreateor['columns'] = [
   {
@@ -49,21 +50,24 @@ export const presetScenesMetaList: PageCreateor['columns'] = [
     valueEnum: { LOW: '低', HIGH: '高' },
     colProps: { xs: 24 },
   },
-  {
-    title: 'AI 角色',
-    name: 'robot_id',
-    required: true,
-    colProps: { xs: 12 },
-    request: async () => {
-      return axios.get('/api/robot?current=0&pageSize=100').then((res) =>
-        res.data.data.data.map((item: robot) => ({
-          label: item.robot_name,
-          value: item.id,
-        }))
-      )
-    },
-  },
-  {
+  ...showColumnInTableWithIdColumn(
+    ['robot', 'robot_name'], {
+      title: 'AI 角色',
+      name: 'robot_id',
+      required: true,
+      colProps: { xs: 12 },
+      request: async () => {
+        return axios.get('/api/robot?current=0&pageSize=100').then((res) =>
+          res.data.data.data.map((item: robot) => ({
+            label: item.robot_name,
+            value: item.id,
+          }))
+        )
+      },
+    }
+  ),
+  ...showColumnInTableWithIdColumn(
+    ['tone', 'microsoft_voice_style'], {
     title: '语气',
     name: 'tone_id',
     dependencies: ['robot_id'],
@@ -78,35 +82,38 @@ export const presetScenesMetaList: PageCreateor['columns'] = [
         }))
       )
     },
-  },
-  {
-    title: '场景',
-    name: 'scene_id',
-    required: true,
-    colProps: { xs: 12 },
-    request: async () => {
-      return axios.get(`/api/scenes?current=0&pageSize=100`).then((res) =>
-        res.data.data.data.map((item: scenes) => ({
-          label: item.scenes_name,
-          value: item.id,
-        }))
-      )
-    },
-  },
-  {
-    title: '场景上下文',
-    name: 'scene_context_id',
-    required: true,
-    hideInSearch: true,
-    colProps: { xs: 12 },
-    dependencies: ['scene_id'],
-    request: async ({ scene_id }) => {
-      return axios.get(`/api/scenes-context?current=0&pageSize=100&scenes_id=${scene_id}`).then((res) =>
-        res.data.data.data.map((item: scenes_context) => ({
-          label: item.short_scenes_context_description,
-          value: item.id,
-        }))
-      )
-    },
-  },
+  }, { renderText: (text) => VOICE_STYLE_MAP[text] }),
+  ...showColumnInTableWithIdColumn(
+    ['scene', 'scenes_name'], {
+      title: '场景',
+      name: 'scene_id',
+      required: true,
+      colProps: { xs: 12 },
+      request: async () => {
+        return axios.get(`/api/scenes?current=0&pageSize=100`).then((res) =>
+          res.data.data.data.map((item: scenes) => ({
+            label: item.scenes_name,
+            value: item.id,
+          }))
+        )
+      },
+  }),
+  ...showColumnInTableWithIdColumn(
+    ['scene_context', 'short_scenes_context_description'], {
+      title: '场景上下文',
+      name: 'scene_context_id',
+      required: true,
+      hideInSearch: true,
+      colProps: { xs: 12 },
+      dependencies: ['scene_id'],
+      request: async ({ scene_id }) => {
+        return axios.get(`/api/scenes-context?current=0&pageSize=100&scenes_id=${scene_id}`).then((res) =>
+          res.data.data.data.map((item: scenes_context) => ({
+            label: item.short_scenes_context_description,
+            value: item.id,
+          }))
+        )
+      },
+    }),
+  
 ]

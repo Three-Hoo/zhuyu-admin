@@ -1,35 +1,13 @@
 import { CommonUploader, CommonUploaderField, IconUploader } from '@/component/icon-uploader'
 import { PageCreateor } from '@/core/create-page'
 import { POST_CATEGORY } from './value-enum/post-category'
-import {
-  BetaSchemaForm,
-  ProForm,
-  ProFormDependency,
-  ProFormList,
-  ProFormSelect,
-  ProFormTextArea,
-  nanoid,
-} from '@ant-design/pro-components'
-import { Button, Col, Form, Input, Popconfirm, Row, Select, Space, Upload, message, notification } from 'antd'
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
-import TextArea from 'antd/lib/input/TextArea'
-import {
-  ArrowDownOutlined,
-  ArrowUpOutlined,
-  CheckCircleOutlined,
-  CloudUploadOutlined,
-  DragOutlined,
-  UploadOutlined,
-  WarningOutlined,
-} from '@ant-design/icons'
+import { ProForm, ProFormDependency, ProFormList, ProFormSelect, ProFormTextArea } from '@ant-design/pro-components'
+import { Button, Col, Popconfirm, Row, Space, message, notification } from 'antd'
+import { ArrowDownOutlined, ArrowUpOutlined, CloudUploadOutlined } from '@ant-design/icons'
 import { post_paragraph } from '@prisma/client'
-import { useMemoizedFn } from 'ahooks/lib'
 import axios from 'axios'
-import { getSTSAuthorization, uploadFile } from '@/utils/web-sts'
-import { RcFile } from 'antd/lib/upload'
-import { marked } from 'marked'
+import { uploadFile } from '@/utils/web-sts'
 import { ProFormListParams, createProFormList, useProFormListCommonProps } from '@/utils/pro-form-list-common-props'
-import { ProFromListCommonProps } from '@ant-design/pro-form/lib/components/List/ListItem'
 import { ImportMarkdown } from '@/utils/parse-markdown'
 
 const typeEnum = {

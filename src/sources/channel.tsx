@@ -1,5 +1,6 @@
 import { IconUploader } from '@/component/icon-uploader'
 import { PageCreateor } from '@/core/create-page'
+import { showColumnInTableWithIdColumn } from '@/utils/pro-form-list-common-props'
 import { robot, scenes, scenes_context } from '@prisma/client'
 import axios from 'axios'
 import { toNumber } from 'lodash'
@@ -21,7 +22,8 @@ export const channelMetaList: PageCreateor['columns'] = [
     hideInSearch: true,
     renderFormItem: (props) => <IconUploader {...props} max={1} multiple={false} />,
   },
-  {
+
+  ...showColumnInTableWithIdColumn(['robot', 'robot_name'], {
     title: 'AI 角色',
     name: 'robot_id',
     hideInTable: true,
@@ -35,15 +37,9 @@ export const channelMetaList: PageCreateor['columns'] = [
         }))
       )
     },
-  },
-  {
-    title: 'AI 角色',
-    name: ['robot', 'robot_name'],
-    hideInForm: true,
-    hideInSearch: true,
-  },
+  }),
 
-  {
+  ...showColumnInTableWithIdColumn(['scene', 'scenes_name'], {
     title: '群聊场景',
     name: 'scene_id',
     required: true,
@@ -58,17 +54,12 @@ export const channelMetaList: PageCreateor['columns'] = [
         }))
       )
     },
-  },
-  {
-    title: '群聊场景',
-    name: ['scene', 'scenes_name'],
-    hideInForm: true,
-    hideInSearch: true,
-  },
-  {
+  }),
+  ...showColumnInTableWithIdColumn(['scene_context', 'short_scenes_context_description'], {
     title: '群聊上下文',
     name: 'scene_context_id',
     hideInTable: true,
+    hideInSearch: true,
     dependencies: ['scene_id'],
     apiValue: toNumber,
     colProps: { xs: 12 },
@@ -80,13 +71,7 @@ export const channelMetaList: PageCreateor['columns'] = [
         }))
       )
     },
-  },
-  {
-    title: '群聊上下文',
-    name: ['scene_context', 'short_scenes_context_description'],
-    hideInForm: true,
-    hideInSearch: true,
-  },
+  }),
 
   {
     title: '语速',

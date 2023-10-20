@@ -9,7 +9,7 @@ import {
   ProFormColumnsType,
   ProTable,
 } from '@ant-design/pro-components'
-import { Button, Drawer, Popconfirm, Spin, UploadProps, notification } from 'antd'
+import { Button, Drawer, Popconfirm, Space, Spin, UploadProps, notification } from 'antd'
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
 import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { last, merge, omit } from 'lodash'
@@ -145,8 +145,10 @@ export const createPage = (options: PageCreateor) => {
           }
 
           ;(originalActions as ReactNode[]).push(...commonAction(record, action))
-          return originalActions
+          return <Space wrap>{originalActions}</Space>
         }
+        _column.fixed = 'right'
+        _column.width = 160
 
         columns[columns.length - 1] = _column
       } else {
@@ -156,7 +158,8 @@ export const createPage = (options: PageCreateor) => {
             valueType: 'option',
             key: 'option',
             hideInForm: true,
-            render: (text, record, _, action) => commonAction(record, action),
+            fixed: 'right',
+            render: (text, record, _, action) => <Space wrap>{commonAction(record, action)}</Space>,
           })
         }
       }
