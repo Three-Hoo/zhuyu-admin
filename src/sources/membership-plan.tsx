@@ -4,6 +4,7 @@ import { PageCreateor } from '@/core/create-page'
 import { CloudUploadOutlined } from '@ant-design/icons'
 import { Button, Popconfirm } from 'antd'
 import axios from 'axios'
+import { getCommonStatus } from './value-enum/common-status'
 
 export const membershipPlanMetaList: PageCreateor['columns'] = [
   {
@@ -74,16 +75,7 @@ export const membershipPlanMetaList: PageCreateor['columns'] = [
     title: '状态',
     name: 'status',
     hideInForm: true,
-    valueEnum: {
-      ENABLED: {
-        text: '已发布',
-        status: 'Success',
-      },
-      DISABLED: {
-        text: '未发布',
-        status: 'Error',
-      },
-    },
+    valueEnum: getCommonStatus('未发布', '已发布'),
   },
   {
     title: '操作',

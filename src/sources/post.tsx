@@ -9,6 +9,7 @@ import axios from 'axios'
 import { uploadFile } from '@/utils/web-sts'
 import { ProFormListParams, createProFormList, useProFormListCommonProps } from '@/utils/pro-form-list-common-props'
 import { ImportMarkdown } from '@/utils/parse-markdown'
+import { getCommonStatus } from './value-enum/common-status'
 
 const typeEnum = {
   text: '文本',
@@ -254,14 +255,7 @@ export const postMetaList: PageCreateor['columns'] = [
     title: '状态',
     name: 'status',
     hideInForm: true,
-    valueEnum: {
-      DRAFT: '草稿',
-      DISABLED: '未发布',
-      ENABLED: {
-        text: '已发布',
-        status: 'Success',
-      },
-    },
+    valueEnum: getCommonStatus('未发布', '已发布'),
   },
   {
     title: '文章内容',

@@ -26,8 +26,8 @@ echo "文件大小：$(du -h zhuyu-admin-bunder.zip)"
 echo "删除上上一个备份..."
 ssh -p $PORT root@$HOST rm -rf $APP_DIR/zhuyu-admin-bunder-bak.zip 
 
-# echo "备份上次打包文件..."
-# ssh -p $PORT root@$HOST zip -r $APP_DIR/zhuyu-admin-bunder-bak.zip $APP_DIR/package.json $APP_DIR/src $APP_DIR/package-lock.json $APP_DIR/next.config.js $APP_DIR/.env $APP_DIR/public $APP_DIR/tsconfig.json $APP_DIR/postcss.config.js $APP_DIR/global.d.ts
+echo "备份上次打包文件..."
+ssh -p $PORT root@$HOST zip -r $APP_DIR/zhuyu-admin-bunder-bak.zip $APP_DIR/src $APP_DIR/prisma $APP_DIR/package.json $APP_DIR/package-lock.json $APP_DIR/next.config.js $APP_DIR/.env $APP_DIR/public $APP_DIR/tsconfig.json $APP_DIR/postcss.config.js $APP_DIR/global.d.ts
 
 echo "上传文件..."
 scp -P $PORT zhuyu-admin-bunder.zip root@$HOST:$APP_DIR/

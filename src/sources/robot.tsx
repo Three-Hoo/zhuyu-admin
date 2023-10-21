@@ -15,6 +15,7 @@ import {
   useParseProFormListParams,
   useProFormListCommonProps,
 } from '@/utils/pro-form-list-common-props'
+import { GENDER } from './value-enum/gender'
 
 const microsoftVoicenames = VOICE_LIST.map((item) => [
   item.ShortName,
@@ -155,10 +156,7 @@ export const robotMetaList: PageCreateor['columns'] = [
     title: '性别',
     required: true,
     colProps: { xs: 8 },
-    valueEnum: {
-      male: '男',
-      female: '女',
-    },
+    valueEnum: GENDER,
   },
   {
     name: 'age',

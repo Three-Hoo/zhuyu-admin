@@ -1,7 +1,7 @@
 import { prisma } from '@/utils/db'
 import { Controller } from '@/core/controller'
 import { NextApiRequest, NextApiResponse } from 'next/dist/shared/lib/utils'
-import { BadRequest, UnSupportMethodError } from '@/core/api_error'
+import { BadRequest } from '@/core/api_error'
 import { paginator } from '@/utils/paginator'
 import { convertionApiValue } from '@/core/create-page'
 import { omit } from 'lodash'

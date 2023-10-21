@@ -2,6 +2,9 @@ import { PageCreateor } from '@/core/create-page'
 import { CloudUploadOutlined } from '@ant-design/icons'
 import { Button, Popconfirm } from 'antd'
 import axios from 'axios'
+import { TASK_CATEGORY } from './value-enum/task-category'
+import { COMMON_STATUS } from './value-enum/common-status'
+import { TASK_TYPE } from './value-enum/task-type'
 
 export const taskMetaList: PageCreateor['columns'] = [
   {
@@ -41,22 +44,14 @@ export const taskMetaList: PageCreateor['columns'] = [
     title: '任务分类',
     name: 'category',
     required: true,
-    valueEnum: {
-      DAILY: '每日任务',
-      NOOB: '新手任务',
-    },
+    valueEnum: TASK_CATEGORY,
   },
   {
     title: '任务类型',
     name: 'task_type',
     disabledInEdit: true,
     required: true,
-    valueEnum: {
-      DAILY: '每日任务',
-      TIMED: '定时任务',
-      ONCE: '一次性任务',
-      RECURRENT: '循环任务',
-    },
+    valueEnum: TASK_TYPE,
   },
   {
     title: '任务奖励类型',
@@ -93,16 +88,7 @@ export const taskMetaList: PageCreateor['columns'] = [
     title: '任务状态',
     name: 'task_status',
     hideInForm: true,
-    valueEnum: {
-      ENABLED: {
-        text: '已发布',
-        status: 'Success',
-      },
-      DISABLED: {
-        text: '未发布',
-        status: 'Error',
-      },
-    },
+    valueEnum: COMMON_STATUS,
   },
   {
     hideInSearch: true,

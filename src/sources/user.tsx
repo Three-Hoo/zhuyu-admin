@@ -1,4 +1,5 @@
 import { PageCreateor } from '@/core/create-page'
+import { COMMON_STATUS } from '@/sources/value-enum/common-status'
 
 export const userMetaList: PageCreateor['columns'] = [
   {
@@ -31,26 +32,11 @@ export const userMetaList: PageCreateor['columns'] = [
   {
     title: '是否付费用户',
     name: 'is_paid',
-    apiValue(value) {
-      return value ? value === 'true' : undefined
-    },
-    valueEnum: {
-      true: '是',
-      false: '否',
-    },
+    valueType: 'switch',
   },
   {
     title: '状态',
     name: 'status',
-    valueEnum: {
-      InActive: {
-        text: '禁用',
-        status: 'Error',
-      },
-      Active: {
-        text: '启用',
-        status: 'Success',
-      },
-    },
+    valueEnum: COMMON_STATUS,
   },
 ]

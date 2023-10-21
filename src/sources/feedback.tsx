@@ -1,4 +1,6 @@
 import { PageCreateor } from '@/core/create-page'
+import { FEEDBACK_TYPE } from './value-enum/FEEDBACK_TYPE'
+import { FEEDBACK_READ_STATUS } from './value-enum/feedback-read-status'
 
 export const feedbackMetaList: PageCreateor['columns'] = [
   // TODO: 实现 message 配置，表名：feedback
@@ -6,10 +8,7 @@ export const feedbackMetaList: PageCreateor['columns'] = [
     title: '类型',
     name: 'type',
     disabledInEdit: true,
-    valueEnum: {
-      WORD: '单词',
-      OTHER: '其它',
-    },
+    valueEnum: FEEDBACK_TYPE,
   },
   {
     title: '用户 id',
@@ -27,11 +26,7 @@ export const feedbackMetaList: PageCreateor['columns'] = [
   {
     title: '状态',
     name: 'status',
-    valueEnum: {
-      UNREAD: '未读',
-      READED: '已读',
-      REPLIED: '已回复',
-    },
+    valueEnum: FEEDBACK_READ_STATUS,
   },
   {
     title: '内容',

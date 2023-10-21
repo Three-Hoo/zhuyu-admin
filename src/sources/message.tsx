@@ -4,6 +4,11 @@ import { user } from '@prisma/client'
 import axios from 'axios'
 import { toNumber } from 'lodash'
 
+const MESSAGE_TYPE = {
+  text: '文本',
+  audio: '音频',
+  image: '图片',
+}
 export const messageMetaList: PageCreateor['columns'] = [
   {
     title: '群名称',
@@ -22,11 +27,7 @@ export const messageMetaList: PageCreateor['columns'] = [
   {
     title: '消息类型',
     name: 'message_type',
-    valueEnum: {
-      text: '文本',
-      audio: '音频',
-      image: '图片',
-    },
+    valueEnum: MESSAGE_TYPE,
   },
   {
     valueType: 'dependency',

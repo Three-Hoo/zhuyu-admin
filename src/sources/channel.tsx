@@ -5,6 +5,7 @@ import { robot, scenes, scenes_context } from '@prisma/client'
 import axios from 'axios'
 import { toNumber } from 'lodash'
 import Link from 'next/link'
+import { COMPLEXITY } from './value-enum/complexity'
 
 export const channelMetaList: PageCreateor['columns'] = [
   {
@@ -86,7 +87,7 @@ export const channelMetaList: PageCreateor['columns'] = [
     title: '回复复杂性',
     name: 'complexity',
     required: true,
-    valueEnum: { LOW: '低', HIGH: '高' },
+    valueEnum: COMPLEXITY,
     colProps: { xs: 12 },
   },
 
