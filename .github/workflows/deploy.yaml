@@ -1,0 +1,25 @@
+name: "发布"
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 18.6
+      - run: npm ci
+      - run: npm run build
+      # 运行 shell 脚本
+      - run: |
+          zip -r zhuyu-admin-bunder.zip package.json package-lock.json next.config.js .env .next public
+      - uses: actions/upload-artifact@v2
+        with:
+          name: zhuyu-admin-bunder-{{ github.sha }}
+          path: zhuyu-admin-bunder.zip
+  
+#   {sub=NT79795, created=Fri Oct 20 16:53:34 CST 2023, exp=1697828014, jti=7191ac35-f513-45b5-8c95-c8f950a04a08}
+# eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOVDc5Nzk1IiwiY3JlYXRlZCI6MTY5Nzc5MjAxNDMxOCwiZXhwIjoxNjk3ODI4MDE0LCJqdGkiOiI3MTkxYWMzNS1mNTEzLTQ1YjUtOGM5NS1jOGY5NTBhMDRhMDgifQ.nMfPPCe0XnZfjNZihgi2D36Kq16M_pCwU85Uutjp7DyKeh0I9__GJVV8aCO_NEjQGXGA-wfY9ikJEPrP6_3sPg
