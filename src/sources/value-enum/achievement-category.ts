@@ -6,10 +6,3 @@ export const ACHIEVEMENT_CATEGORY = {
   CHAT: '聊天',
   LEVEL: '等级',
 }
-
-//   服务器地址：114.132.197.244
-// 端口号：7003
-// 账号：root
-// 密码:qwer12344321..
-
-// 管理后台：https://admin-test.sanhe.org.cn/dashboard

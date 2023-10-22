@@ -1,5 +1,5 @@
 import { PageCreateor } from '@/core/create-page'
-import { FEEDBACK_TYPE } from './value-enum/FEEDBACK_TYPE'
+import { FEEDBACK_TYPE } from './value-enum/feedback-type'
 import { FEEDBACK_READ_STATUS } from './value-enum/feedback-read-status'
 
 export const feedbackMetaList: PageCreateor['columns'] = [
