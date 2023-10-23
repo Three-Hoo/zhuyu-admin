@@ -1,18 +1,9 @@
 import { PageCreateor } from '@/core/create-page'
 import { ProFormListParams, createProFormList, useProFormListCommonProps } from '@/utils/pro-form-list-common-props'
-import {
-  ProForm,
-  ProFormGroup,
-  ProFormList,
-  ProFormSelect,
-  ProFormText,
-  ProFormTextArea,
-} from '@ant-design/pro-components'
-import { scene_context_reminder, scenes } from '@prisma/client'
-import { Space } from 'antd'
+import { ProFormList, ProFormSelect, ProFormText, ProFormTextArea } from '@ant-design/pro-components'
+import { scenes } from '@prisma/client'
 import axios from 'axios'
-import { debounce, noop } from 'lodash'
-import { nanoid } from 'nanoid'
+import { AIRole } from './value-enum/ai-role'
 
 function ScenesContextReminder(props: { params: ProFormListParams }) {
   const commonProps = useProFormListCommonProps({
@@ -43,10 +34,26 @@ function ScenesContextGuide(props: { params: ProFormListParams }) {
       guide: '',
     },
   })
-
   return (
     <ProFormList {...commonProps}>
       <ProFormTextArea name="guide" label="引导语" placeholder="引导语" colProps={{ xs: 24 }} />
+    </ProFormList>
+  )
+}
+
+function ScenesContextPrompt(props: { params: ProFormListParams }) {
+  const commonProps = useProFormListCommonProps({
+    api: '/api/scenes_context_prompt',
+    params: props.params,
+    defaultRecord: {
+      role: 'user',
+      content: '',
+    },
+  })
+  return (
+    <ProFormList {...commonProps}>
+      <ProFormSelect name="role" label="角色" valueEnum={AIRole} colProps={{ xs: 6 }}></ProFormSelect>
+      <ProFormTextArea name="content" label="内容" colProps={{ xs: 18 }} />
     </ProFormList>
   )
 }
@@ -87,17 +94,18 @@ export const scenesContextMetaList: PageCreateor['columns'] = [
     valueType: 'textarea',
   },
   {
-    title: '场景提示词',
-    dataIndex: 'prompt',
-    hideInSearch: true,
-    valueType: 'textarea',
-  },
-  {
     title: '创建时间',
     dataIndex: 'created_time',
     valueType: 'date',
     hideInForm: true,
     apiValue: (value) => new Date(value as string),
+  },
+  {
+    title: '场景提示(Prompt)',
+    dataIndex: 'prompt',
+    hideInSearch: true,
+    hideInTable: true,
+    renderFormItem: createProFormList(ScenesContextPrompt),
   },
   {
     title: '第一句引导语',
