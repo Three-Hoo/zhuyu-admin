@@ -9,7 +9,7 @@ import {
   ProFormColumnsType,
   ProTable,
 } from '@ant-design/pro-components'
-import { Button, Drawer, Popconfirm, Space, Spin, UploadProps, notification } from 'antd'
+import { Button, Drawer, FormInstance, Popconfirm, Space, Spin, UploadProps, notification } from 'antd'
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
 import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { last, merge, omit } from 'lodash'
@@ -56,6 +56,7 @@ export const createPage = (options: PageCreateor) => {
   const Page = () => {
     const router = useRouter()
     const ref = useRef<ActionType>()
+    const formRef = useRef<FormInstance>()
     const client = useIsClient()
     const [visibleMutation, updateVisibleMutation] = useState(false)
     const [visibleDescription, updateVisibleDescription] = useState(false)
@@ -257,7 +258,26 @@ export const createPage = (options: PageCreateor) => {
                 )}
               </Spin>
             ) : (
-              <BetaSchemaForm grid={true} columns={columns as any[]} onFinish={onFinish} />
+              <BetaSchemaForm
+                formRef={formRef}
+                onValuesChange={(_, values) => {
+                  localStorage.setItem(`${options.title}${api}`, JSON.stringify(values))
+                }}
+                initialValues={
+                  localStorage.getItem(`${options.title}${api}`)
+                    ? JSON.parse(localStorage.getItem(`${options.title}${api}`) as string)
+                    : undefined
+                }
+                grid={true}
+                columns={columns as any[]}
+                onFinish={onFinish}
+                onReset={(values) => {
+                  formRef.current?.setFieldsValue(
+                    Object.fromEntries(Object.keys(values).map((item) => [item, undefined]))
+                  )
+                  localStorage.removeItem(`${options.title}${api}`)
+                }}
+              />
             )}
           </Drawer>
           {!options.renderDetail ? null : (
