@@ -18,12 +18,12 @@ export default createPage({
         key="create-package"
         layoutType="ModalForm"
         columns={scenesMetaList}
-        title="新建成就类型"
+        title="新建场景类型"
         onConfirm={async (values) => axios.post('/api/scenes', values)}
         trigger={
           <Button type="primary" ghost>
             <PlusCircleOutlined />
-            新建成就类型
+            新建场景类型
           </Button>
         }
       />,
@@ -36,7 +36,7 @@ export default createPage({
         trigger={
           <Button type="primary" ghost>
             <UngroupOutlined />
-            查看成就类型
+            查看场景类型
           </Button>
         }
       />,

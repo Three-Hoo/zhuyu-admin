@@ -238,6 +238,7 @@ export const createPage = (options: PageCreateor) => {
       <Layout>
         <PageContainer title={options.title}>
           <Drawer
+            maskClosable={false}
             title={`编辑 ${options.title}`}
             placement="right"
             width={options.width ?? '80vw'}

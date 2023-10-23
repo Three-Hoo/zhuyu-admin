@@ -20,14 +20,14 @@ echo "检查 build 是否报错..."
 pnpm build
 
 rm -rf zhuyu-admin-bunder.zip build .next
-zip -r zhuyu-admin-bunder.zip src prisma package.json package-lock.json next.config.js .env public tsconfig.json postcss.config.js global.d.ts
+zip -r zhuyu-admin-bunder.zip src prisma package.json pnpm-lock.yaml next.config.js .env public tsconfig.json postcss.config.js global.d.ts
 echo "文件大小：$(du -h zhuyu-admin-bunder.zip)"
 
 echo "删除上上一个备份..."
 ssh -p $PORT root@$HOST rm -rf $APP_DIR/zhuyu-admin-bunder-bak.zip 
 
 echo "备份上次打包文件..."
-ssh -p $PORT root@$HOST zip -r $APP_DIR/zhuyu-admin/zhuyu-admin-bunder-bak.zip $APP_DIR/zhuyu-admin/src $APP_DIR/zhuyu-admin/prisma $APP_DIR/zhuyu-admin/package.json $APP_DIR/zhuyu-admin/package-lock.json $APP_DIR/zhuyu-admin/next.config.js $APP_DIR/zhuyu-admin/.env $APP_DIR/zhuyu-admin/public $APP_DIR/zhuyu-admin/tsconfig.json $APP_DIR/zhuyu-admin/postcss.config.js $APP_DIR/zhuyu-admin/global.d.ts
+ssh -p $PORT root@$HOST zip -r $APP_DIR/zhuyu-admin/zhuyu-admin-bunder-bak.zip $APP_DIR/zhuyu-admin/src $APP_DIR/zhuyu-admin/prisma $APP_DIR/zhuyu-admin/package.json $APP_DIR/zhuyu-admin/pnpm-lock.yaml $APP_DIR/zhuyu-admin/next.config.js $APP_DIR/zhuyu-admin/.env $APP_DIR/zhuyu-admin/public $APP_DIR/zhuyu-admin/tsconfig.json $APP_DIR/zhuyu-admin/postcss.config.js $APP_DIR/zhuyu-admin/global.d.ts
 
 echo "上传文件..."
 scp -P $PORT zhuyu-admin-bunder.zip root@$HOST:$APP_DIR/

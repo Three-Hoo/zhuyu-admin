@@ -32,13 +32,12 @@ export default Controller(
     async GET(request: NextApiRequest) {
       request.checkAuthorization()
       const { q, from = 'en', to = 'zh-CHS' } = request.query
-
       if (!q) {
         throw new BadRequest('参数错误')
       }
 
-      const appKey = '0c1b5e4ca7aaa024' ?? process.env.YOUDAO_APPID
-      const appSecret = '3IzRWkQmbU2Qb3Vpk4DKFwGv9wciYxoS' ?? process.env.YOUDAO_SECRET
+      const appKey = process.env.YOUDAO_APPID ?? '0c1b5e4ca7aaa024'
+      const appSecret = process.env.YOUDAO_SECRET ?? '3IzRWkQmbU2Qb3Vpk4DKFwGv9wciYxoS'
       const salt = nanoid()
       const currentTime = Math.round(new Date().getTime() / 1000)
       const query = truncate(q as string)

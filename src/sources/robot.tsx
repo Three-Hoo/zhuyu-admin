@@ -5,9 +5,9 @@ import { Button, Col, Input, Row, Select, Space, Tooltip, message } from 'antd'
 import { ProFormList, ProFormSelect, ProFormSlider, ProFormTextArea } from '@ant-design/pro-components'
 import { LoadingOutlined, PauseOutlined, PlayCircleOutlined } from '@ant-design/icons'
 import { FormInstance } from 'antd/lib'
-import { upperFirst } from 'lodash'
+import { lowerCase, upperFirst } from 'lodash'
 import { tone } from '@prisma/client'
-import { VOICE_STYLE } from './value-enum/voice-style'
+import { VOICE_STYLE, VOICE_STYLE_MAP } from './value-enum/voice-style'
 import { useTextToSpeak } from '@/utils/use-text-to-speak'
 import {
   ProFormListParams,
@@ -47,7 +47,13 @@ const MicrosoftVoice = (props: {
 
   return (
     <Space>
-      <Select options={props.config.options} value={props.value} showSearch onChange={props.onChange} />
+      <Select
+        options={props.config.options}
+        value={props.value}
+        showSearch
+        onChange={props.onChange}
+        style={{ width: '300px' }}
+      />
       <Button size="small" disabled={isLoading || !props.value} onClick={() => togglePlay()}>
         {isLoading ? (
           <LoadingOutlined />
@@ -119,9 +125,8 @@ const Tone = (props: { params: ProFormListParams; value?: tone[]; onChange?: (va
           <ProFormSelect
             name="microsoft_voice_style"
             options={
-              VOICE_MAP[microsoft_voice_name]?.StyleList?.map(
-                (item) => VOICE_STYLE.find((i) => i.value === item)!
-              ).filter(Boolean) ?? VOICE_STYLE.slice(0, 1)
+              VOICE_MAP[microsoft_voice_name]?.StyleList?.map((item) => VOICE_STYLE_MAP[item]!).filter(Boolean) ??
+              VOICE_STYLE.slice(0, 1)
             }
             label="语气风格"
             placeholder="请选择风格"
@@ -167,25 +172,27 @@ export const robotMetaList: PageCreateor['columns'] = [
     hideInSearch: true,
   },
   {
-    name: 'microsoft_voice_name',
-    title: '微软发音人',
-    required: true,
-    dependencies: ['gender', 'personal_blurb', 'rate'],
-    colProps: { xs: 12 },
+    valueType: 'dependency',
+    name: ['gender', 'personal_blurb', 'rate'],
+    hideInTable: true,
     hideInSearch: true,
-    request: async (params) => {
-      const values = microsoftVoicenames
-        .filter((item) => item[1].includes(upperFirst(params.gender)))
-        .map((item) => {
-          return {
-            label: item[1],
-            value: item[0],
-          }
-        })
-      return values
+    columns: ({ gender }) => {
+      return [
+        {
+          name: 'microsoft_voice_name',
+          title: '微软发音人',
+          colProps: { xs: 12 },
+          required: true,
+          width: 'md',
+          valueEnum: Object.fromEntries(
+            microsoftVoicenames.filter((item) => item[1].includes(upperFirst(lowerCase(gender))))
+          ),
+          renderFormItem: (props, config, form) => <MicrosoftVoice config={config} form={form} props={props} />,
+        },
+      ]
     },
-    renderFormItem: (props, config, form) => <MicrosoftVoice config={config} form={form} props={props} />,
   },
+
   {
     name: 'rate',
     title: '默认语速',
@@ -233,6 +240,7 @@ export const robotMetaList: PageCreateor['columns'] = [
     name: ['_count', 'tones'],
     title: '语气数量',
     hideInSearch: true,
+    hideInForm: true,
   },
 
   {

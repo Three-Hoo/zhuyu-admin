@@ -4,16 +4,11 @@ import crypto from 'crypto'
 import { withSessionRoute } from '../../utils/session'
 
 const config = {
-  // 放行判断相关参数
   bucket: 'zhuyu-test-1256652038',
   region: 'ap-guangzhou',
-
   secretId: process.env.COS_SECRET_ID,
   secretKey: process.env.COS_SECRET_KEY,
-  // 密钥有效期
   durationSeconds: 1800,
-  // 这里填写存储桶、地域，例如：test-1250000000、ap-guangzhou
-  // 限制的上传后缀
   extWhiteList: ['jpg', 'jpeg', 'png', 'gif', 'bmp'],
 }
 
