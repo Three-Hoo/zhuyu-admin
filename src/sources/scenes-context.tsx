@@ -7,7 +7,7 @@ import { AIRole } from './value-enum/ai-role'
 
 function ScenesContextReminder(props: { params: ProFormListParams }) {
   const commonProps = useProFormListCommonProps({
-    api: '/api/scenes_context_reminder',
+    api: '/api/scenes-context-reminder',
     params: props.params,
     required: false,
     defaultRecord: {
@@ -28,7 +28,7 @@ function ScenesContextReminder(props: { params: ProFormListParams }) {
 
 function ScenesContextGuide(props: { params: ProFormListParams }) {
   const commonProps = useProFormListCommonProps({
-    api: '/api/scenes_context_guide',
+    api: '/api/scenes-context-guide',
     params: props.params,
     defaultRecord: {
       guide: '',
@@ -43,7 +43,7 @@ function ScenesContextGuide(props: { params: ProFormListParams }) {
 
 function ScenesContextPrompt(props: { params: ProFormListParams }) {
   const commonProps = useProFormListCommonProps({
-    api: '/api/scenes_context_prompt',
+    api: '/api/scenes-context-prompt',
     params: props.params,
     defaultRecord: {
       role: 'user',
@@ -101,10 +101,12 @@ export const scenesContextMetaList: PageCreateor['columns'] = [
     apiValue: (value) => new Date(value as string),
   },
   {
-    title: '场景提示(Prompt)',
-    dataIndex: 'prompt',
+    title: '场景提示(Prompt), 第一句的角色必须【用户】,变量使用 {{}} 包裹，如: {{name}}',
+    tooltip: '可以使用的变量: name：姓名, age：年龄, gender：性别, character：性格',
+    dataIndex: 'scene_context_prompts',
     hideInSearch: true,
     hideInTable: true,
+    required: true,
     renderFormItem: createProFormList(ScenesContextPrompt),
   },
   {

@@ -20,6 +20,7 @@ import {
   UserSwitchOutlined,
   UsergroupAddOutlined,
   WechatOutlined,
+  AudioOutlined,
 } from '@ant-design/icons'
 
 const sidebar = {
@@ -165,6 +166,11 @@ const sidebar = {
             path: '/dashboard/system/random',
             name: '随机',
             icon: <SwapOutlined />,
+          },
+          {
+            path: '/dashboard/system/ssml',
+            name: '语音合成',
+            icon: <AudioOutlined />,
           },
         ]
       }

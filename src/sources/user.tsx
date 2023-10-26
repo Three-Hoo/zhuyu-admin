@@ -1,5 +1,6 @@
 import { PageCreateor } from '@/core/create-page'
 import { COMMON_STATUS } from '@/sources/value-enum/common-status'
+import { YES_OR_NO } from './value-enum/yes-or-no'
 
 export const userMetaList: PageCreateor['columns'] = [
   {
@@ -32,7 +33,7 @@ export const userMetaList: PageCreateor['columns'] = [
   {
     title: '是否付费用户',
     name: 'is_paid',
-    valueType: 'switch',
+    valueEnum: YES_OR_NO
   },
   {
     title: '状态',

@@ -4,7 +4,6 @@ import { createPage } from '@/core/create-page'
 import { scenesMetaList } from '@/sources/scenes'
 import { scenesContextMetaList } from '@/sources/scenes-context'
 import { PlusCircleOutlined, UngroupOutlined } from '@ant-design/icons'
-import { BetaSchemaForm } from '@ant-design/pro-components'
 import { Button } from 'antd'
 import axios from 'axios'
 

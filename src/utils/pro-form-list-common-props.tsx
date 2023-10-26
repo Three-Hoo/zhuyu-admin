@@ -36,7 +36,7 @@ export const useProFormListCommonProps = (props: CommonProps) => {
     initialValue: value,
     creatorButtonProps: {
       creatorButtonText: `增加${schema.title || Reflect.get(schema, 'label')}`,
-      position: 'top',
+      position: 'bottom',
       type: 'primary',
       ghost: true,
     } as const,
@@ -67,12 +67,16 @@ export const useParseProFormListParams = (props: { params: ProFormListParams }) 
   return { fieldValues }
 }
 
-export const showColumnInTableWithIdColumn = (namePath: string[], column: PageCreateor['columns'][number], customColumn?: PageCreateor['columns'][number]) => {
+export const showColumnInTableWithIdColumn = (
+  namePath: string[],
+  column: PageCreateor['columns'][number],
+  customColumn?: PageCreateor['columns'][number]
+) => {
   return [
     {
       ...column,
       hideInTable: true,
-    }, 
+    },
     {
       ...column,
       hideInForm: true,
@@ -82,6 +86,6 @@ export const showColumnInTableWithIdColumn = (namePath: string[], column: PageCr
       required: false,
       name: namePath,
       ...customColumn,
-    }
+    },
   ] as PageCreateor['columns']
 }

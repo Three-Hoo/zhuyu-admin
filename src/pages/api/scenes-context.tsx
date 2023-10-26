@@ -6,7 +6,7 @@ import { paginator } from '@/utils/paginator'
 import { convertionApiValue } from '@/core/create-page'
 import { scenesContextMetaList } from '@/sources/scenes-context'
 import { omit } from 'lodash'
-import { scene_context_guide, scene_context_reminder } from '@prisma/client'
+import { scene_context_guide, scene_context_prompt, scene_context_reminder } from '@prisma/client'
 
 /**
  * 创建时间：2023/10/16
@@ -71,7 +71,8 @@ export default Controller(
         data: {
           ...other,
           scene_context_reminders: { create: other.scene_context_reminders ?? [] },
-          scene_context_guides: { create: other.scene_context_guide ?? [] },
+          scene_context_guides: { create: other.scene_context_guides ?? [] },
+          scene_context_prompts: { create: other.scene_context_prompts ?? [] },
         },
       })
     }
@@ -104,7 +105,7 @@ export default Controller(
       const [scenes_context] = await prisma.$transaction([
         prisma.scenes_context.update({
           where: { id: Number(request.query.id) },
-          data: omit(other, 'scene_context_reminders', 'scene_context_guides'),
+          data: omit(other, 'scene_context_reminders', 'scene_context_guides', 'scene_context_prompts'),
         }),
         ...(other.scene_context_reminders?.map((item: scene_context_reminder) => {
           return item.id
@@ -115,6 +116,11 @@ export default Controller(
           return item.id
             ? prisma.scene_context_guide.update({ where: { id: item.id }, data: item })
             : prisma.scene_context_guide.create({ data: { ...item, scene_context_id: Number(request.query.id) } })
+        }) ?? []),
+        ...(other.scene_context_prompts?.map((item: scene_context_prompt) => {
+          return item.id
+            ? prisma.scene_context_prompt.update({ where: { id: item.id }, data: item })
+            : prisma.scene_context_prompt.create({ data: { ...item, scene_context_id: Number(request.query.id) } })
         }) ?? []),
       ])
 
@@ -131,7 +137,11 @@ export default Controller(
       request.checkAuthorization()
       await prisma.scenes_context.update({
         where: { id: Number(request.query.id) },
-        data: { scene_context_reminders: { deleteMany: {} }, scene_context_guides: { deleteMany: {} } },
+        data: {
+          scene_context_reminders: { deleteMany: {} },
+          scene_context_guides: { deleteMany: {} },
+          scene_context_prompts: { deleteMany: {} },
+        },
       })
 
       return prisma.scenes_context.delete({ where: { id: Number(request.query.id) } })
