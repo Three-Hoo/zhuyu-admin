@@ -17,7 +17,7 @@ export default Controller(
      */
     async DELETE(request: NextApiRequest) {
       request.checkAuthorization()
-      return prisma.scene_context_prompt.delete({ where: { id: Number(request.query.id) } })
+      return prisma.prompt_template_content.delete({ where: { id: Number(request.query.id) } })
     }
   }
 )

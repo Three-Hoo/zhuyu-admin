@@ -39,6 +39,7 @@ export type PageCreateor = {
   api: string | ((params: Record<string, any>) => string)
 
   mergeQueryOnFinish?: boolean
+  interceptor?: (values: Record<string, any>) => Promise<void>
 }
 
 export const convertionApiValue = (values: any, columns: PageCreateor['columns']) => {
@@ -189,6 +190,9 @@ export const createPage = (options: PageCreateor) => {
       if (options.mergeQueryOnFinish) {
         values = merge(values, router.query)
       }
+
+      await options.interceptor?.(values)
+      localStorage.removeItem(`${options.title}${api}`)
 
       if (mutableId) {
         return axios

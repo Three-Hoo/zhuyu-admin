@@ -21,6 +21,7 @@ import {
   UsergroupAddOutlined,
   WechatOutlined,
   AudioOutlined,
+  FormatPainterOutlined,
 } from '@ant-design/icons'
 
 const sidebar = {
@@ -155,6 +156,11 @@ const sidebar = {
             name: '聊天房间管理',
             icon: <CommentOutlined />,
           },
+          {
+            path: '/dashboard/chat/prompt-template',
+            name: 'Prmpt 模板管理',
+            icon: <FormatPainterOutlined />,
+          },
         ],
       },
       {
@@ -172,8 +178,8 @@ const sidebar = {
             name: '语音合成',
             icon: <AudioOutlined />,
           },
-        ]
-      }
+        ],
+      },
     ],
   },
 }

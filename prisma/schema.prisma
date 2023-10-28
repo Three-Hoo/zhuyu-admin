@@ -511,14 +511,14 @@ model scenes_context {
   scenes_context_description       String?                  @db.VarChar(900)
   scenes_context_description_cn    String?                  @db.VarChar(900)
   short_scenes_context_description String?                  @db.VarChar(32)
-  prompt                           String?                  @db.VarChar(900)
   scenes_id                        Int?
   scene                            scenes?                  @relation(fields: [scenes_id], references: [id])
   scene_context_reminders          scene_context_reminder[]
   scene_context_guides             scene_context_guide[]
+  prompt_template_id               Int?
+  prompt_template                  prompt_template?         @relation(fields: [prompt_template_id], references: [id])
   channels                         channel[]
   preset_scenes                    preset_scenes[]
-  scene_context_prompts            scene_context_prompt[]
 
   @@index([scenes_id], map: "scenes_context_scene")
 }
@@ -936,15 +936,27 @@ model scene_context_guide {
   scene_context scenes_context? @relation(fields: [scene_context_id], references: [id])
 }
 
-model scene_context_prompt {
-  created_by       String?   @db.VarChar(32)
-  created_time     DateTime? @db.Timestamp(6)
-  updated_by       String?   @db.VarChar(32)
-  updated_time     DateTime? @db.Timestamp(6)
-  id               Int       @id(map: "scene_context_prompt_pk") @default(autoincrement())
-  scene_context_id Int
-  role             String    @db.VarChar(32)
-  content          String    @db.VarChar(255)
+model prompt_template_content {
+  created_by         String?          @db.VarChar(32)
+  created_time       DateTime?        @db.Timestamp(6)
+  updated_by         String?          @db.VarChar(32)
+  updated_time       DateTime?        @db.Timestamp(6)
+  id                 Int              @id(map: "prompt_template_content_pk") @default(autoincrement())
+  prompt_template_id Int
+  role               String           @db.VarChar(32)
+  content            String           @db.VarChar(255)
+  prompt_template    prompt_template? @relation(fields: [prompt_template_id], references: [id])
+}
 
-  scene_context scenes_context? @relation(fields: [scene_context_id], references: [id])
+model prompt_template {
+  created_by               String?                   @db.VarChar(32)
+  created_time             DateTime?                 @db.Timestamp(6)
+  updated_by               String?                   @db.VarChar(32)
+  updated_time             DateTime?                 @db.Timestamp(6)
+  id                       Int                       @id(map: "prompt_template_pk") @default(autoincrement())
+  name                     String                    @db.VarChar(255)
+  description              String                    @db.VarChar(500)
+  prompt_template_type     String?                   @db.VarChar(32)
+  prompt_template_contents prompt_template_content[]
+  scenes_context           scenes_context[]
 }

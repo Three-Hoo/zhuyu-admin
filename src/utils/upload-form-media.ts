@@ -71,20 +71,18 @@ const uploadEntries = async (enteries: [string, any][]) => {
       return [key, value]
     })
   )) as any[]
+  count--
   return urlEntries
 }
 
 export const uploadFormMedia = async (values: Record<string, any>) => {
   let newValues = { ...values }
   const fileEntries = filterEntries(values)
-  console.log('🚀 ~ file: upload-form-media.ts:73 ~ uploadFormMedia ~ newValues:', newValues, fileEntries)
   if (!fileEntries) {
     return values
   }
 
   const urlEntries = await uploadEntries(fileEntries as any)
-
   newValues = merge({}, values, Object.fromEntries(urlEntries))
-  console.log('🚀 ~ file: upload-form-media.ts:39 ~ uploadFormMedia ~ newValues:', newValues, urlEntries)
   return newValues
 }

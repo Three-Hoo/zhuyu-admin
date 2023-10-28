@@ -6,7 +6,7 @@ import { paginator } from '@/utils/paginator'
 import { convertionApiValue } from '@/core/create-page'
 import { scenesContextMetaList } from '@/sources/scenes-context'
 import { omit } from 'lodash'
-import { scene_context_guide, scene_context_prompt, scene_context_reminder } from '@prisma/client'
+import { prompt_template_content, scene_context_guide, scene_context_reminder } from '@prisma/client'
 
 /**
  * 创建时间：2023/10/16
@@ -25,15 +25,22 @@ export default Controller(
       if (!Number(request.query.id)) {
         throw new BadRequest('参数错误')
       }
-      return prisma.scenes_context.findFirst({
+      const scenes_context = await prisma.scenes_context.findFirst({
         include: {
           scene_context_reminders: true,
           scene_context_guides: true,
+          prompt_template: {
+            include: {
+              prompt_template_contents: true,
+            },
+          },
         },
         where: {
           id: Number(request.query.id),
         },
       })
+
+      return scenes_context
     }
 
     /**
@@ -50,8 +57,10 @@ export default Controller(
       return paginator(prisma.scenes_context, prisma.scenes_context.findMany, {
         include: {
           scene: true,
+          prompt_template: true,
         },
         where: convertionApiValue(query, scenesContextMetaList),
+        orderBy: { created_time: 'desc' },
         current: Number(current) || 1,
         pageSize: Number(pageSize) || 20,
       })
@@ -67,14 +76,19 @@ export default Controller(
       request.checkAuthorization()
       const { ...other } = request.body
 
-      return prisma.scenes_context.create({
+      const response = await prisma.scenes_context.create({
         data: {
-          ...other,
+          scenes_id: other.scenes_id,
+          scenes_context_description: other.scenes_context_description,
+          scenes_context_description_cn: other.scenes_context_description_cn,
+          short_scenes_context_description: other.short_scenes_context_description,
+          prompt_template_id: other.prompt_template_id,
           scene_context_reminders: { create: other.scene_context_reminders ?? [] },
           scene_context_guides: { create: other.scene_context_guides ?? [] },
-          scene_context_prompts: { create: other.scene_context_prompts ?? [] },
         },
       })
+
+      return response
     }
 
     /**
@@ -117,11 +131,11 @@ export default Controller(
             ? prisma.scene_context_guide.update({ where: { id: item.id }, data: item })
             : prisma.scene_context_guide.create({ data: { ...item, scene_context_id: Number(request.query.id) } })
         }) ?? []),
-        ...(other.scene_context_prompts?.map((item: scene_context_prompt) => {
-          return item.id
-            ? prisma.scene_context_prompt.update({ where: { id: item.id }, data: item })
-            : prisma.scene_context_prompt.create({ data: { ...item, scene_context_id: Number(request.query.id) } })
-        }) ?? []),
+        // ...(other.scene_context_prompts?.map((item: scene_context_prompt) => {
+        //   return item.id
+        //     ? prisma.scene_context_prompt.update({ where: { id: item.id }, data: item })
+        //     : prisma.scene_context_prompt.create({ data: { ...item, scene_context_id: Number(request.query.id) } })
+        // }) ?? []),
       ])
 
       return scenes_context
@@ -140,7 +154,7 @@ export default Controller(
         data: {
           scene_context_reminders: { deleteMany: {} },
           scene_context_guides: { deleteMany: {} },
-          scene_context_prompts: { deleteMany: {} },
+          // scene_context_prompts: { deleteMany: {} },
         },
       })
 

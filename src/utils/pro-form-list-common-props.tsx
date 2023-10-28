@@ -81,10 +81,12 @@ export const showColumnInTableWithIdColumn = (
       ...column,
       hideInForm: true,
       hideInSearch: true,
+      hideInTable: false,
       renderFormItem: undefined,
       request: undefined,
       required: false,
       name: namePath,
+      dataIndex: namePath,
       ...customColumn,
     },
   ] as PageCreateor['columns']
