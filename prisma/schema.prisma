@@ -33,17 +33,19 @@ model achievement {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model achievement_type {
-  tenant_id    String?       @db.VarChar(32)
-  revision     Int?
-  created_by   String?       @db.VarChar(32)
-  created_time DateTime?     @default(now()) @db.Timestamp(6)
-  updated_by   String?       @db.VarChar(32)
-  updated_time DateTime?     @db.Timestamp(6)
-  id           Int           @id @default(autoincrement())
-  name         String?       @unique(map: "type") @db.VarChar(90)
-  is_summary   Boolean?
-  category     String?       @db.VarChar(255)
-  achievements achievement[]
+  tenant_id      String?       @db.VarChar(32)
+  revision       Int?
+  created_by     String?       @db.VarChar(32)
+  created_time   DateTime?     @default(now()) @db.Timestamp(6)
+  updated_by     String?       @db.VarChar(32)
+  updated_time   DateTime?     @db.Timestamp(6)
+  id             Int           @id @default(autoincrement())
+  name           String?       @unique(map: "type") @db.VarChar(90)
+  is_summary     Boolean?
+  category       String?       @db.VarChar(255)
+  identification String?       @db.VarChar(255)
+  per_score      Int           @default(1)
+  achievements   achievement[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments

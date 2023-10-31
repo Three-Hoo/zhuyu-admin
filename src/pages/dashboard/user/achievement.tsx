@@ -25,7 +25,7 @@ export default createPage({
         trigger={
           <Button type="primary" ghost>
             <PlusCircleOutlined />
-            创建成就套
+            创建成就组
           </Button>
         }
       />,
@@ -38,7 +38,7 @@ export default createPage({
         trigger={
           <Button type="primary" ghost>
             <UngroupOutlined />
-            查看成就套
+            查看成就组
           </Button>
         }
       />,

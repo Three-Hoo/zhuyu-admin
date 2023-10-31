@@ -53,7 +53,7 @@ export default Controller(
         throw new BadRequest(`参数错误, name: ${name}, category: ${category}`)
       }
       return prisma.achievement_type.create({
-        data: { name, category },
+        data: request.body,
       })
     }
 
