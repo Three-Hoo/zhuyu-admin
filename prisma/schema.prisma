@@ -361,7 +361,7 @@ model post {
   updated_by   String?   @db.VarChar(32)
   updated_time DateTime? @db.Timestamp(6)
   id           Int       @id @default(autoincrement())
-  title        String?   @db.VarChar(32)
+  title        String?   @db.VarChar(255)
   duration     Int?
   cover        String?   @db.VarChar(255)
   author       String?   @db.VarChar(90)
@@ -389,8 +389,8 @@ model post_paragraph {
   id                  Int       @id @default(autoincrement())
   post_id             Int
   post_paragraph_type String?   @db.VarChar(90)
-  content             String?   @db.VarChar(900)
-  content_cn          String?   @db.VarChar(900)
+  content             String?   @db.Text()
+  content_cn          String?   @db.Text()
   sort                Int?
   speak_url           String?   @db.VarChar(255)
   post                post?     @relation(fields: [post_id], references: [id])
@@ -946,7 +946,7 @@ model prompt_template_content {
   id                 Int              @id(map: "prompt_template_content_pk") @default(autoincrement())
   prompt_template_id Int
   role               String           @db.VarChar(32)
-  content            String           @db.VarChar(255)
+  content            String           @db.VarChar(900)
   prompt_template    prompt_template? @relation(fields: [prompt_template_id], references: [id])
 }
 
