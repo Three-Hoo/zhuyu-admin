@@ -52,14 +52,14 @@ export default Controller(
       })
 
       const cosController = new COS({ SecretId: process.env.COS_SECRET_ID, SecretKey: process.env.COS_SECRET_KEY })
-      const cosBucket = 'sanhe-english-1256652038'
-      const cosRegion = 'ap-guangzhou'
+      const cosBucket = process.env.COS_BUCKET as string
+      const cosRegion = process.env.COS_REGION as string
       const cosKey = nanoid()
 
       const data = await cosController.putObject({
         Body: Buffer.from(audioData),
         Bucket: cosBucket,
-        Key: `audio/${cosKey}/${cosKey}.wav`,
+        Key: `audios/${cosKey}/${cosKey}.wav`,
         Region: cosRegion,
       })
 

@@ -4,12 +4,12 @@ import crypto from 'crypto'
 import { withSessionRoute } from '../../utils/session'
 
 const config = {
-  bucket: 'zhuyu-test-1256652038',
-  region: 'ap-guangzhou',
+  bucket: process.env.COS_BUCKET,
+  region: process.env.COS_REGION,
   secretId: process.env.COS_SECRET_ID,
   secretKey: process.env.COS_SECRET_KEY,
   durationSeconds: 1800,
-  extWhiteList: ['jpg', 'jpeg', 'png', 'gif', 'bmp'],
+  extWhiteList: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'mp3', 'wav', 'pcm'],
 }
 
 const generateCosKey = function (ext, category = 'images') {
@@ -22,7 +22,6 @@ const generateCosKey = function (ext, category = 'images') {
 const getTempCredential = async function (cosKey) {
   const shortBucketName = config.bucket.substr(0, config.bucket.lastIndexOf('-'))
   const appId = config.bucket.substr(1 + config.bucket.lastIndexOf('-'))
-  // 开始获取临时秘钥
   const policy = {
     version: '2.0',
     statement: [
@@ -30,7 +29,6 @@ const getTempCredential = async function (cosKey) {
         action: ['name/cos:PutObject', 'name/cos:PostObject'],
         effect: 'allow',
         resource: [
-          // 仅限cosKey资源
           'qcs::cos:' + config.region + ':uid/' + appId + ':prefix//' + appId + '/' + shortBucketName + '/' + cosKey,
         ],
       },
@@ -58,21 +56,12 @@ const getSignature = function (tempCredential, cosHost, pathname) {
   const credentials = tempCredential.credentials
   const keyTime = `${tempCredential.startTime};${tempCredential.expiredTime}`
 
-  // 步骤一：生成 SignKey
   const signKey = crypto.createHmac(signAlgorithm, credentials.tmpSecretKey).update(keyTime).digest('hex')
-  console.log('signKey:' + signKey)
-
-  // 步骤二：生成 StringToSign
   const httpString = `put\n/${pathname}\n\nhost=${cosHost}\n`
-  console.log('httpString:' + httpString)
   const httpStringHash = crypto.createHash(signAlgorithm).update(httpString).digest('hex')
   const stringToSign = `${signAlgorithm}\n${keyTime}\n${httpStringHash}\n`
-  console.log('stringToSign:' + stringToSign)
-
   // 步骤三：生成 Signature
   const signature = crypto.createHmac(signAlgorithm, signKey).update(stringToSign).digest('hex')
-  console.log('signature:' + signature)
-
   // 步骤四：生成 authorization
   let authorization = `q-sign-algorithm=${signAlgorithm}&
 q-ak=${credentials.tmpSecretId}&
@@ -82,8 +71,6 @@ q-header-list=host&q-url-param-list=&q-signature=${signature}`
 
   // 去掉掉上面换行导致的\n
   authorization = authorization.replace(/\n/g, '')
-  console.log('authorization:' + authorization)
-
   return authorization
 }
 
