@@ -32,7 +32,7 @@ export const feedbackMetaList: PageCreateor['columns'] = [
     title: '内容',
     disabledInEdit: true,
     name: 'content',
-    hideInTable: true,
+    ellipsis: true,
     hideInSearch: true,
     valueType: 'textarea',
   },

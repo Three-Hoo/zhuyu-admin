@@ -9,8 +9,6 @@ datasource db {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model achievement {
-  tenant_id        String?   @db.VarChar(32)
-  revision         Int?
   created_by       String?   @db.VarChar(32)
   created_time     DateTime? @default(now()) @db.Timestamp(6)
   updated_by       String?   @db.VarChar(32)
@@ -33,8 +31,6 @@ model achievement {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model achievement_type {
-  tenant_id      String?       @db.VarChar(32)
-  revision       Int?
   created_by     String?       @db.VarChar(32)
   created_time   DateTime?     @default(now()) @db.Timestamp(6)
   updated_by     String?       @db.VarChar(32)
@@ -50,8 +46,6 @@ model achievement_type {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model channel {
-  tenant_id             String?         @db.VarChar(32)
-  revision              Int?
   created_by            String?         @db.VarChar(32)
   created_time          DateTime?       @default(now()) @db.Timestamp(6)
   updated_by            String?         @db.VarChar(32)
@@ -77,8 +71,6 @@ model channel {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model channel_member {
-  tenant_id    String?   @db.VarChar(32)
-  revision     Int?
   created_by   String?   @db.VarChar(32)
   created_time DateTime? @default(now()) @db.Timestamp(6)
   updated_by   String?   @db.VarChar(32)
@@ -94,8 +86,6 @@ model channel_member {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model coupon {
-  tenant_id          String?   @db.VarChar(32)
-  revision           Int?
   created_by         String?   @db.VarChar(32)
   created_time       DateTime? @default(now()) @db.Timestamp(6)
   updated_by         String?   @db.VarChar(32)
@@ -114,8 +104,6 @@ model coupon {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model credit_plan {
-  tenant_id       String?   @db.VarChar(32)
-  revision        Int?
   created_by      String?   @db.VarChar(32)
   created_time    DateTime? @default(now()) @db.Timestamp(6)
   updated_by      String?   @db.VarChar(32)
@@ -135,8 +123,6 @@ model credit_plan {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model credit_record {
-  tenant_id          String?   @db.VarChar(32)
-  revision           Int?
   created_by         String?   @db.VarChar(32)
   created_time       DateTime? @default(now()) @db.Timestamp(6)
   updated_by         String?   @db.VarChar(32)
@@ -153,8 +139,6 @@ model credit_record {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model daily_learning_record {
-  tenant_id    String?   @db.VarChar(32)
-  revision     Int?
   created_by   String?   @db.VarChar(32)
   created_time DateTime? @default(now()) @db.Timestamp(6)
   updated_by   String?   @db.VarChar(32)
@@ -170,8 +154,6 @@ model daily_learning_record {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model favorite {
-  tenant_id     String?   @db.VarChar(32)
-  revision      Int?
   created_by    String?   @db.VarChar(32)
   created_time  DateTime? @default(now()) @db.Timestamp(6)
   updated_by    String?   @db.VarChar(32)
@@ -204,8 +186,6 @@ model flyway_schema_history {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model followers {
-  tenant_id                    String?   @db.VarChar(32)
-  revision                     Int?
   created_by                   String?   @db.VarChar(32)
   created_time                 DateTime? @default(now()) @db.Timestamp(6)
   updated_by                   String?   @db.VarChar(32)
@@ -223,8 +203,6 @@ model followers {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model footmark {
-  tenant_id          String?   @db.VarChar(32)
-  revision           Int?
   created_by         String?   @db.VarChar(32)
   created_time       DateTime? @default(now()) @db.Timestamp(6)
   updated_by         String?   @db.VarChar(32)
@@ -242,8 +220,6 @@ model footmark {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model membership_plan {
-  tenant_id             String?   @db.VarChar(32)
-  revision              Int?
   created_by            String?   @db.VarChar(32)
   created_time          DateTime? @default(now()) @db.Timestamp(6)
   updated_by            String?   @db.VarChar(32)
@@ -265,8 +241,6 @@ model membership_plan {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model membership_record {
-  tenant_id     String?   @db.VarChar(32)
-  revision      Int?
   created_by    String?   @db.VarChar(32)
   created_time  DateTime? @default(now()) @db.Timestamp(6)
   updated_by    String?   @db.VarChar(32)
@@ -284,8 +258,6 @@ model membership_record {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model message {
-  tenant_id        String?   @db.VarChar(32)
-  revision         Int?
   created_by       String?   @db.VarChar(32)
   created_time     DateTime? @default(now()) @db.Timestamp(6)
   updated_by       String?   @db.VarChar(32)
@@ -294,14 +266,14 @@ model message {
   channel_id       Int
   channel          channel?  @relation(fields: [channel_id], references: [id])
   message_type     String    @db.VarChar(90)
-  original_content String    @db.VarChar(900)
-  content          String?   @db.VarChar(900)
-  content_cn       String?   @db.VarChar(32)
-  audio_url        String?   @db.VarChar(32)
-  image_url        String?   @db.VarChar(32)
+  original_content String    @db.Text()
+  content          String?   @db.Text()
+  content_cn       String?   @db.Text()
+  audio_url        String?   @db.VarChar(255)
+  image_url        String?   @db.VarChar(255)
   parent_id        Int?
   sender           Int
-  sender_avatar    String?   @db.VarChar(32)
+  sender_avatar    String?   @db.VarChar(255)
   sender_nickname  String?   @db.VarChar(32)
 
   @@index([channel_id], map: "message_channel_id")
@@ -309,8 +281,6 @@ model message {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model order {
-  tenant_id         String?   @db.VarChar(32)
-  revision          Int?
   created_by        String?   @db.VarChar(32)
   created_time      DateTime? @default(now()) @db.Timestamp(6)
   updated_by        String?   @db.VarChar(32)
@@ -336,8 +306,6 @@ model order {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model order_record {
-  tenant_id           String?   @db.VarChar(32)
-  revision            Int?
   created_by          String?   @db.VarChar(32)
   created_time        DateTime? @default(now()) @db.Timestamp(6)
   updated_by          String?   @db.VarChar(32)
@@ -354,8 +322,6 @@ model order_record {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model post {
-  tenant_id    String?   @db.VarChar(32)
-  revision     Int?
   created_by   String?   @db.VarChar(32)
   created_time DateTime? @default(now()) @db.Timestamp(6)
   updated_by   String?   @db.VarChar(32)
@@ -380,8 +346,6 @@ model post {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model post_paragraph {
-  tenant_id           String?   @db.VarChar(32)
-  revision            Int?
   created_by          String?   @db.VarChar(32)
   created_time        DateTime? @default(now()) @db.Timestamp(6)
   updated_by          String?   @db.VarChar(32)
@@ -400,8 +364,6 @@ model post_paragraph {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model post_record {
-  tenant_id    String?   @db.VarChar(32)
-  revision     Int?
   created_by   String?   @db.VarChar(32)
   created_time DateTime? @default(now()) @db.Timestamp(6)
   updated_by   String?   @db.VarChar(32)
@@ -417,8 +379,6 @@ model post_record {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model preset_scenes {
-  tenant_id                 String?         @db.VarChar(32)
-  revision                  Int?
   created_by                String?         @db.VarChar(32)
   created_time              DateTime?       @default(now()) @db.Timestamp(6)
   updated_by                String?         @db.VarChar(32)
@@ -442,19 +402,17 @@ model preset_scenes {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model robot {
-  tenant_id            String?         @db.VarChar(32)
-  revision             Int?
   created_by           String?         @db.VarChar(32)
   created_time         DateTime?       @default(now()) @db.Timestamp(6)
   updated_by           String?         @db.VarChar(32)
   updated_time         DateTime?       @db.Timestamp(6)
   id                   Int             @id @default(autoincrement())
-  prompt               String?         @db.VarChar(255)
+  prompt               String?         @db.Text()
   gender               String?         @db.VarChar(32)
   avatar               String?         @db.VarChar(255)
   microsoft_voice_name String?         @db.VarChar(90)
   robot_name           String?         @db.VarChar(32)
-  personal_blurb       String?         @db.VarChar(900)
+  personal_blurb       String?         @db.Text()
   age                  Int?
   styledegree          Int?
   rate                 Int?
@@ -465,8 +423,6 @@ model robot {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model scene_context_reminder {
-  tenant_id         String?         @db.VarChar(32)
-  revision          Int?
   created_by        String?         @db.VarChar(32)
   created_time      DateTime?       @default(now()) @db.Timestamp(6)
   updated_by        String?         @db.VarChar(32)
@@ -483,8 +439,6 @@ model scene_context_reminder {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model scenes {
-  tenant_id       String?          @db.VarChar(32)
-  revision        Int?
   created_by      String?          @db.VarChar(32)
   created_time    DateTime?        @default(now()) @db.Timestamp(6)
   updated_by      String?          @db.VarChar(32)
@@ -503,8 +457,6 @@ model scenes {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model scenes_context {
-  tenant_id                        String?                  @db.VarChar(32)
-  revision                         Int?
   created_by                       String?                  @db.VarChar(32)
   created_time                     DateTime?                @default(now()) @db.Timestamp(6)
   updated_by                       String?                  @db.VarChar(32)
@@ -527,8 +479,6 @@ model scenes_context {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model show_achievement {
-  tenant_id      String?   @db.VarChar(32)
-  revision       Int?
   created_by     String?   @db.VarChar(32)
   created_time   DateTime? @default(now()) @db.Timestamp(6)
   updated_by     String?   @db.VarChar(32)
@@ -543,8 +493,6 @@ model show_achievement {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model task {
-  tenant_id      String?   @db.VarChar(32)
-  revision       Int?
   created_by     String?   @db.VarChar(32)
   created_time   DateTime? @default(now()) @db.Timestamp(6)
   updated_by     String?   @db.VarChar(32)
@@ -564,8 +512,6 @@ model task {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model temporary_credit {
-  tenant_id    String?   @db.VarChar(32)
-  revision     Int?
   created_by   String?   @db.VarChar(32)
   created_time DateTime? @default(now()) @db.Timestamp(6)
   updated_by   String?   @db.VarChar(32)
@@ -583,8 +529,6 @@ model temporary_credit {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model tone {
-  tenant_id             String?         @db.VarChar(32)
-  revision              Int?
   created_by            String?         @db.VarChar(32)
   created_time          DateTime?       @default(now()) @db.Timestamp(6)
   updated_by            String?         @db.VarChar(32)
@@ -603,8 +547,6 @@ model tone {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model user {
-  tenant_id                       String?                          @db.VarChar(32)
-  revision                        Int?
   created_by                      String?                          @db.VarChar(32)
   created_time                    DateTime?                        @default(now()) @db.Timestamp(6)
   updated_by                      String?                          @db.VarChar(32)
@@ -637,12 +579,11 @@ model user {
   credit_plan_payment_records     credit_plan_payment_record[]
   membership_plan_payment_records membership_plan_payment_record[]
   feedbacks                       feedback[]
+  user_config                     user_config?
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model user_achievement {
-  tenant_id      String?      @db.VarChar(32)
-  revision       Int?
   created_by     String?      @db.VarChar(32)
   created_time   DateTime?    @default(now()) @db.Timestamp(6)
   updated_by     String?      @db.VarChar(32)
@@ -656,8 +597,6 @@ model user_achievement {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model user_achievement_type {
-  tenant_id           String?   @db.VarChar(32)
-  revision            Int?
   created_by          String?   @db.VarChar(32)
   created_time        DateTime? @default(now()) @db.Timestamp(6)
   updated_by          String?   @db.VarChar(32)
@@ -673,8 +612,6 @@ model user_achievement_type {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model user_config {
-  tenant_id            String?   @db.VarChar(32)
-  revision             Int?
   created_by           String?   @db.VarChar(32)
   created_time         DateTime? @default(now()) @db.Timestamp(6)
   updated_by           String?   @db.VarChar(32)
@@ -687,13 +624,12 @@ model user_config {
   letter_size          Int?
   letter_column_space  Int?
   letter_row_space     Int?
-  user_id              Int?      @unique(map: "user_config_user_id")
+  user_id              Int       @unique(map: "user_config_user_id")
+  user                 user      @relation(fields: [user_id], references: [id])
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model user_coupon {
-  tenant_id      String?   @db.VarChar(32)
-  revision       Int?
   created_by     String?   @db.VarChar(32)
   created_time   DateTime? @default(now()) @db.Timestamp(6)
   updated_by     String?   @db.VarChar(32)
@@ -714,8 +650,6 @@ model user_coupon {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model user_credit {
-  tenant_id              String?   @db.VarChar(32)
-  revision               Int?
   created_by             String?   @db.VarChar(32)
   created_time           DateTime? @default(now()) @db.Timestamp(6)
   updated_by             String?   @db.VarChar(32)
@@ -731,8 +665,6 @@ model user_credit {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model user_login_record {
-  tenant_id    String?   @db.VarChar(32)
-  revision     Int?
   created_by   String?   @db.VarChar(32)
   created_time DateTime? @default(now()) @db.Timestamp(6)
   updated_by   String?   @db.VarChar(32)
@@ -748,8 +680,6 @@ model user_login_record {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model user_task {
-  tenant_id           String?   @db.VarChar(32)
-  revision            Int?
   created_by          String?   @db.VarChar(32)
   created_time        DateTime? @default(now()) @db.Timestamp(6)
   updated_by          String?   @db.VarChar(32)
@@ -766,8 +696,6 @@ model user_task {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model word {
-  tenant_id          String?   @db.VarChar(32)
-  revision           Int?
   created_by         String?   @db.VarChar(32)
   created_time       DateTime? @default(now()) @db.Timestamp(6)
   updated_by         String?   @db.VarChar(32)
@@ -789,8 +717,6 @@ model word {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model word_book {
-  tenant_id              String?   @db.VarChar(32)
-  revision               Int?
   created_by             String?   @db.VarChar(32)
   created_time           DateTime? @db.Timestamp(6)
   updated_by             String?   @db.VarChar(32)
@@ -811,8 +737,6 @@ model word_book {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model word_book_links {
-  tenant_id    String?   @db.VarChar(32)
-  revision     Int?
   created_by   String?   @db.VarChar(32)
   created_time DateTime? @db.Timestamp(6)
   updated_by   String?   @db.VarChar(32)
@@ -826,8 +750,6 @@ model word_book_links {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model word_book_users {
-  tenant_id    String?   @db.VarChar(32)
-  revision     Int?
   created_by   String?   @db.VarChar(32)
   created_time DateTime? @db.Timestamp(6)
   updated_by   String?   @db.VarChar(32)
@@ -842,8 +764,6 @@ model word_book_users {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model word_record {
-  tenant_id    String?   @db.VarChar(32)
-  revision     Int?
   created_by   String?   @db.VarChar(32)
   created_time DateTime? @default(now()) @db.Timestamp(6)
   updated_by   String?   @db.VarChar(32)
@@ -858,8 +778,6 @@ model word_record {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model word_tag {
-  tenant_id     String?   @db.VarChar(32)
-  revision      Int?
   created_by    String?   @db.VarChar(32)
   created_time  DateTime? @db.Timestamp(6)
   updated_by    String?   @db.VarChar(32)
@@ -873,8 +791,6 @@ model word_tag {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model word_tag_links {
-  tenant_id    String?   @db.VarChar(32)
-  revision     Int?
   created_by   String?   @db.VarChar(32)
   created_time DateTime? @db.Timestamp(6)
   updated_by   String?   @db.VarChar(32)

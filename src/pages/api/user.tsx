@@ -38,7 +38,9 @@ export default Controller(
       const { current, pageSize, ...query } = request.query
 
       return paginator(prisma.user, prisma.user.findMany, {
-        include: {},
+        include: {
+          user_config: true,
+        },
         where: convertionApiValue(query, userMetaList),
         current: Number(current) || 1,
         pageSize: Number(pageSize) || 20,

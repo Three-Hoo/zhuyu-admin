@@ -228,12 +228,14 @@ export const robotMetaList: PageCreateor['columns'] = [
     copyable: true,
     valueType: 'textarea',
     hideInSearch: true,
+    ellipsis: true,
   },
   {
     name: 'prompt',
     title: '提示词',
     copyable: true,
     valueType: 'textarea',
+    ellipsis: true,
     hideInSearch: true,
   },
   {

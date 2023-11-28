@@ -12,7 +12,7 @@ import {
 import { Button, Drawer, FormInstance, Popconfirm, Space, Spin, UploadProps, notification } from 'antd'
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
 import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { last, merge, omit } from 'lodash'
+import { isNil, last, merge, omit } from 'lodash'
 import useSWR from 'swr'
 
 import { useIsClient } from '@uidotdev/usehooks'
@@ -47,6 +47,9 @@ export const convertionApiValue = (values: any, columns: PageCreateor['columns']
     Object.entries(values).map(([key, value]) => {
       if (key === 'id') {
         return [key, Number(value)]
+      }
+      if (value == '' || isNil(value)) {
+        return []
       }
       return [key, columns.find((item) => item.name === key || item.dataIndex === key)?.apiValue?.(value) ?? value]
     })

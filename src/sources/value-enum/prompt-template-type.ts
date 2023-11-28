@@ -3,11 +3,13 @@ export const PROMPT_TEMPLATE_TYPE = {
   //
   SYNTAX: '句型分析',
   //
-  CHINA_SPEECH: '中文差异',
+  DIFF_CHINESE: '中文差异',
   //
   SYNTAX_RECOLOR: '语法润色',
   //
   SYNTAX_CHECK: '语法检查',
+
+  ANOTHER_WAY: '换种说法',
   //
   REPLY: '教我回复',
   //
